@@ -294,6 +294,52 @@ console.log('\nMobile')
     .isVisible()
   menuOpen ? pass('the mobile menu opens') : fail('the mobile menu did not open')
 
+  /* Below 1024px a demo has no inline frame; it opens over the whole viewport
+     instead. That is the only way to reach a demo on a phone, so it is the one
+     mobile interaction that has to be exercised rather than merely rendered.
+     The button is matched by its full name: "Open menu" also starts with
+     "Open", and a looser match opens the navigation and passes for the wrong
+     reason. */
+  const LAUNCH = [
+    ['quotation', 'Open Quotation Engine'],
+    ['supervisor', 'Open Field Supervisor'],
+    ['foundry', 'Open Production Counting'],
+  ]
+  for (const [slug, button] of LAUNCH) {
+    await page.goto(`${BASE}/works/${slug}`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(700)
+    await page.getByRole('button', { name: button }).click()
+    await page.waitForTimeout(3000)
+
+    const frame = page.frames().find((f) => f.url().includes('/demos/'))
+    const text = frame ? await frame.evaluate(() => document.body.innerText).catch(() => '') : ''
+    if (!text.trim()) fail(`${slug}: the full screen demo is empty on a phone`)
+    else if (text.includes('There is no page here')) fail(`${slug}: the shell's 404 rendered full screen`)
+    else pass(`${slug}: opens full screen on a phone`)
+
+    const close = page.getByRole('button', { name: 'Close' })
+    if ((await close.count()) === 0) {
+      fail(`${slug}: no way out of the full screen demo`)
+      continue
+    }
+    await close.click()
+    await page.waitForTimeout(400)
+    ;(await page.getByRole('button', { name: 'Close' }).count()) === 0
+      ? pass(`${slug}: closes again`)
+      : fail(`${slug}: Close did not dismiss the demo`)
+  }
+
+  // The foundry demo must get its phone route, not the split screen, which is
+  // unreadable at 390px.
+  await page.goto(`${BASE}/works/foundry`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(700)
+  await page.getByRole('button', { name: 'Open Production Counting' }).click()
+  await page.waitForTimeout(2500)
+  const foundryUrl = page.frames().find((f) => f.url().includes('/demos/'))?.url() ?? ''
+  foundryUrl.includes('#/worker')
+    ? pass('foundry opens its phone route on a phone')
+    : fail(`foundry opened ${foundryUrl || 'nothing'}, expected #/worker`)
+
   await ctx.close()
 }
 
