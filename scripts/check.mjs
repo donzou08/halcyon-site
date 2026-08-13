@@ -122,7 +122,7 @@ console.log('\nPages')
     else fail(`${BASE} (no trailing slash) rendered nothing`)
   }
 
-  for (const path of ['/', '/contact', ...SYSTEMS.map((s) => `/${s}`)]) {
+  for (const path of ['/', '/contact', '/industrial-flooring', ...SYSTEMS.map((s) => `/${s}`)]) {
     missing.length = 0
     const res = await page.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 })
     if (!res || res.status() >= 400) {
@@ -155,6 +155,7 @@ console.log('\nPages')
     ['/works/quotation', '/quotation'],
     ['/works', '/'],
     ['/engagements', '/contact'],
+    ['/flooring', '/industrial-flooring'],
   ]) {
     await page.goto(BASE + from, { waitUntil: 'networkidle' })
     const landed = new URL(page.url()).pathname.replace(/\/$/, '') || '/'
@@ -305,7 +306,7 @@ console.log('\nMobile')
     hasTouch: true,
   })
   const page = await ctx.newPage()
-  for (const path of ['/', '/quotation', '/supervisor', '/command-center', '/contact']) {
+  for (const path of ['/', '/quotation', '/supervisor', '/command-center', '/contact', '/industrial-flooring']) {
     await page.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 })
     await page.waitForTimeout(600)
     const overflow = await page.evaluate(
@@ -370,6 +371,41 @@ console.log('\nMobile')
   foundryUrl.includes('#/worker')
     ? pass('foundry opens its phone route on a phone')
     : fail(`foundry opened ${foundryUrl || 'nothing'}, expected #/worker`)
+
+  await ctx.close()
+}
+
+/* ------------------------------------------------------------------ *
+ * The flooring landing page reaches its three systems.
+ *
+ * It exists to send a flooring contractor into the tender, quotation and
+ * supervisor demos. A page that describes them without linking to them is a
+ * brochure, which is the thing this site is not.
+ * ------------------------------------------------------------------ */
+console.log('\nIndustrial flooring page')
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await ctx.newPage()
+  await page.goto(BASE + '/industrial-flooring', { waitUntil: 'networkidle' })
+
+  for (const slug of ['tender', 'quotation', 'supervisor']) {
+    const n = await page.locator(`a[href="${at('/' + slug)}"]`).count()
+    n > 0 ? pass(`links to ${slug}`) : fail(`no link to /${slug} on the flooring page`)
+  }
+
+  // The rate card and the stage sequence are what prove it knows the trade.
+  const text = await page.evaluate(() => document.body.innerText)
+  const trade = ['6mm PU Concrete', 'ESD', 'Surface preparation', 'Line marking', 'CGST']
+  const absent = trade.filter((t) => !text.includes(t))
+  absent.length === 0
+    ? pass('carries the rate card and the stage sequence')
+    : fail(`flooring page is missing: ${absent.join(', ')}`)
+
+  const imgs = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('img')).filter((i) => i.complete && i.naturalWidth === 0)
+      .length,
+  )
+  imgs === 0 ? pass('every screenshot decodes') : fail(`${imgs} broken screenshots`)
 
   await ctx.close()
 }
@@ -464,7 +500,7 @@ console.log('\nCopy')
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
   const banned = ['Running in production', 'In progress', 'Demonstration', 'Branded for']
-  for (const path of ['/', '/quotation', '/foundry', '/contact']) {
+  for (const path of ['/', '/quotation', '/foundry', '/contact', '/industrial-flooring']) {
     await page.goto(BASE + path, { waitUntil: 'networkidle' })
     const text = await page.evaluate(() => document.body.innerText)
     const found = banned.filter((b) => text.includes(b))
@@ -474,7 +510,7 @@ console.log('\nCopy')
   }
 
   // And no prices, anywhere.
-  for (const path of ['/', '/quotation', '/contact']) {
+  for (const path of ['/', '/quotation', '/contact', '/industrial-flooring']) {
     await page.goto(BASE + path, { waitUntil: 'networkidle' })
     const text = await page.evaluate(() => document.body.innerText)
     // A rupee figure with thousands separators is a price. The demos have

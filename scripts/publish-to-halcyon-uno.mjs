@@ -68,6 +68,8 @@ if (slugs.length === 0) {
 
 const routes = [
   'contact',
+  'industrial-flooring',
+  'flooring',
   ...slugs,
   // Shapes that exist in Instagram captions and LinkedIn posts already, and the
   // pages this site used to carry. main.tsx redirects every one of them, but a

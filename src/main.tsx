@@ -6,6 +6,7 @@ import { ScrollToTop } from './components/chrome'
 import Home from './pages/Home'
 import System from './pages/System'
 import Contact from './pages/Contact'
+import Flooring from './pages/Flooring'
 import NotFound from './pages/NotFound'
 
 /**
@@ -63,6 +64,11 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
+
+        {/* A landing page for one trade, ahead of the catch-all below so the
+            slug is never mistaken for a system. */}
+        <Route path="/industrial-flooring" element={<Flooring />} />
+        <Route path="/flooring" element={<Navigate to="/industrial-flooring" replace />} />
 
         <Route path="/works" element={<Navigate to="/" replace />} />
         <Route path="/works/:slug" element={<LegacyRedirect />} />

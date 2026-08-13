@@ -159,9 +159,19 @@ export default function Home() {
                           {niche.blurb}
                         </p>
                       </div>
-                      <span className="field shrink-0">
-                        {systems.length} {systems.length === 1 ? 'system' : 'systems'}
-                      </span>
+                      <div className="flex shrink-0 flex-col items-start gap-2 md:items-end">
+                        <span className="field">
+                          {systems.length} {systems.length === 1 ? 'system' : 'systems'}
+                        </span>
+                        {niche.slug === 'flooring' && (
+                          <Link
+                            to="/industrial-flooring"
+                            className="text-[0.86rem] font-500 text-ink underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-gold-ink"
+                          >
+                            All three, for flooring contractors →
+                          </Link>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-5">
                       {systems.map((s) => (
