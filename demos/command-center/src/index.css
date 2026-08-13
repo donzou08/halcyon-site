@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+/* ---- Halcyon house theme -------------------------------------------------
+   This is the one demo that is not branded for a client, because the command
+   centre is Halcyon's own product. So it wears Halcyon's colours: obsidian,
+   a single sparing gold, and Cormorant on the wordmark and section titles.
+
+   Figures are DM Mono, not Cormorant. A dashboard is read by scanning columns
+   of numbers, which wants tabular figures; the serif is for the brand, not the
+   data.
+------------------------------------------------------------------------- */
+@theme {
+  --color-obsidian: #0c0c0c;
+  --color-charcoal: #161616;
+  --color-raised: #1c1c1c;
+  --color-smoke: #2c2c2c;
+  --color-hairline: #232323;
+  --color-gold: #c49a38;
+  --color-golddim: #4a3f1e;
+  --color-teal: #1e7a72;
+  --color-offwhite: #f0eeea;
+  --color-body: #b8b4ae;
+  --color-stone: #888480;
+  --color-faint: #5f5c58;
+
+  /* Status. Reserved: never reused as a chart series colour. */
+  --color-serious: #c2544a;
+  --color-warning: #c08a2e;
+
+  --font-sans: 'Jost', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-obsidian);
+  color: var(--color-offwhite);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Figures are tabular so columns line up and a changing number does not jitter. */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 300;
+}
+
+/* Section labels, matching the Halcyon website's convention. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-teal);
+}
+
+.card {
+  background: var(--color-charcoal);
+  border: 1px solid var(--color-hairline);
+  border-radius: 12px;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: riseIn 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+::selection {
+  background: var(--color-golddim);
+  color: var(--color-offwhite);
+}

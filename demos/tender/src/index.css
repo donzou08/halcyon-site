@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+
+/* ---- Meridian Industrial Flooring theme ---------------------------------
+   Shared verbatim with the companion quotation and supervisor demos so the
+   three apps read as one suite. Meridian's deep industrial blue is deliberately
+   distinct from Halcyon's gold; each client gets their own branded tool and
+   Halcyon stays the quiet builder underneath.
+------------------------------------------------------------------------- */
+@theme {
+  --color-brand-50: #eef6fd;
+  --color-brand-100: #d7e9fa;
+  --color-brand-200: #b0d2f4;
+  --color-brand-300: #7fb4ea;
+  --color-brand-400: #4a90dc;
+  --color-brand-500: #2470c4;
+  --color-brand-600: #1459a6;
+  --color-brand-700: #0f4785;
+  --color-brand-800: #0e3a6b;
+  --color-brand-900: #0d3159;
+
+  --color-signal-400: #f59e42;
+  --color-signal-500: #e8801a;
+  --color-signal-600: #c46410;
+
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f1f5f8;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--font-sans);
+}
+
+.safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}
+
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 8px 24px -12px rgba(15, 23, 42, 0.18);
+}
+
+/* Figures use DM Mono so numbers read as data and columns line up. */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: riseIn 240ms ease-out both;
+}

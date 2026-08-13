@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f8f8f6" />
+
+    <title>Halcyon, operational systems for businesses that have outgrown the spreadsheet</title>
+    <meta
+      name="description"
+      content="Halcyon builds bespoke operational software for manufacturing, construction, contracting and industrial supply businesses. Five working systems you can open and use right now, in your browser."
+    />
+    <link rel="canonical" href="https://halcyon.uno/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://halcyon.uno/" />
+    <meta property="og:site_name" content="Halcyon" />
+    <meta property="og:title" content="Halcyon, operational systems you can open and use" />
+    <meta
+      property="og:description"
+      content="Quotations, field supervision, tenders, production counting and an owner's command centre. Not screenshots. The actual applications, running in your browser."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111110'/%3E%3Cpath d='M16 4.5 26.4 10.5v12L16 28.5 5.6 22.5v-12L16 4.5Z' fill='none' stroke='%23C49A38' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12.4 11.6v8.8M19.6 11.6v8.8M12.4 16h7.2' stroke='%23C49A38' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         AD TRACKING. Both fields are empty until you paste the IDs in, and
+         nothing loads while they are empty, so the site stays clean until
+         there is a campaign to measure.
+
+         metaPixelId  Meta Events Manager → Data sources → your pixel.
+                      A 15 to 16 digit number. This is the important one:
+                      without it you cannot build a retargeting audience,
+                      and retargeting converts several times better than cold
+                      traffic does.
+         ga4Id        Google Analytics → Admin → Data streams → Measurement
+                      ID, in the form G-XXXXXXXXXX. Tells you where the
+                      traffic came from.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <script>
+      window.HALCYON_ANALYTICS = {
+        metaPixelId: '',
+        ga4Id: '',
+      }
+    </script>
+    <script>
+      ;(function () {
+        var cfg = window.HALCYON_ANALYTICS || {}
+
+        if (cfg.metaPixelId) {
+          !(function (f, b, e, v, n, t, s) {
+            if (f.fbq) return
+            n = f.fbq = function () {
+              n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            }
+            if (!f._fbq) f._fbq = n
+            n.push = n
+            n.loaded = !0
+            n.version = '2.0'
+            n.queue = []
+            t = b.createElement(e)
+            t.async = !0
+            t.src = v
+            s = b.getElementsByTagName(e)[0]
+            s.parentNode.insertBefore(t, s)
+          })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+          fbq('init', cfg.metaPixelId)
+          fbq('track', 'PageView')
+        }
+
+        if (cfg.ga4Id) {
+          var g = document.createElement('script')
+          g.async = true
+          g.src = 'https://www.googletagmanager.com/gtag/js?id=' + cfg.ga4Id
+          document.head.appendChild(g)
+          window.dataLayer = window.dataLayer || []
+          window.gtag = function () {
+            window.dataLayer.push(arguments)
+          }
+          gtag('js', new Date())
+          gtag('config', cfg.ga4Id, { send_page_view: false })
+        }
+      })()
+
+      /* This site is a single page application, so the browser only ever loads
+         once. Route changes have to be reported by hand or every visit looks
+         like one page view of the home page. main.tsx calls this on navigation. */
+      window.halcyonTrackPage = function (path) {
+        try {
+          if (window.fbq) fbq('track', 'PageView')
+        } catch (e) {}
+        try {
+          if (window.gtag && window.HALCYON_ANALYTICS.ga4Id)
+            gtag('event', 'page_view', { page_path: path })
+        } catch (e) {}
+      }
+
+      /* Fired when the contact form actually succeeds, not when it is opened.
+         This is the event that makes the pixel worth having: it teaches Meta
+         what a real enquiry looks like, and it is what a campaign optimises
+         toward. */
+      window.halcyonTrackLead = function () {
+        try {
+          if (window.fbq) fbq('track', 'Lead')
+        } catch (e) {}
+        try {
+          if (window.gtag) gtag('event', 'generate_lead')
+        } catch (e) {}
+      }
+
+      /* Fired when a visitor opens a demo. Not a lead, but the strongest signal
+         short of one, and worth a custom audience to retarget. */
+      window.halcyonTrackDemo = function (slug) {
+        try {
+          if (window.fbq) fbq('trackCustom', 'OpenedDemo', { system: slug })
+        } catch (e) {}
+        try {
+          if (window.gtag) gtag('event', 'opened_demo', { system: slug })
+        } catch (e) {}
+      }
+    </script>
+
+    <!-- Vercel Web Analytics. Needs no ID: switch it on in the Vercel dashboard
+         under the project's Analytics tab. -->
+    <script defer src="/_vercel/insights/script.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

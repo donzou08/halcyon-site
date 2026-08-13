@@ -1,0 +1,258 @@
+@import 'tailwindcss';
+
+/* ===========================================================================
+   Halcyon, the technical document
+   ---------------------------------------------------------------------------
+   THESIS. Halcyon sells operational software to people who read engineering
+   drawings, spec sheets, rate cards and GST invoices all day. So the site is
+   built as one of those documents, not as a brochure: a strict grid, hairline
+   rules doing structural work, tabular figures, and a title block. It refuses
+   the centred-serif-on-black arrangement the old site shipped, which read as an
+   invitation to an event rather than as a company that builds software.
+
+   OWN-WORLD. Paper ground, near-black ink, hairlines. Gold appears only where a
+   drawing would be stamped: the primary action and the figure that matters.
+   Obsidian is punctuation, used for at most two full-bleed passages. Grotesque
+   for everything, mono for figures, codes and field labels. No serif anywhere,
+   which is the single largest departure from the old identity and the point of
+   the exercise.
+
+   Inherited and non-negotiable: the hexagon mark, the HALCYON wordmark, and the
+   gold itself. Those are the brand. The arrangement was never the brand.
+   ======================================================================== */
+
+@theme {
+  /* Ground. `paper` is the page, `raised` is a panel sitting on it, `sunk` is a
+     wash used for insets and table stripes. */
+  --color-paper: #f8f8f6;
+  --color-raised: #ffffff;
+  --color-sunk: #f1f0ec;
+
+  /* Ink. Contrast on paper: 17.8:1, 9.0:1, 4.95:1. All pass for body copy. */
+  --color-ink: #111110;
+  --color-ink-2: #46453f;
+  --color-ink-3: #6e6c64;
+
+  /* Rules. The site's main structural device, so there are two weights. */
+  --color-rule: #e3e2dc;
+  --color-rule-strong: #c6c4bb;
+
+  /* Gold. 3.42:1 on paper, which is a pass for large text, borders and UI, and
+     a fail for anything set small. `gold-ink` is the same hue taken down to
+     5.8:1 and is the only gold allowed to carry small type. */
+  --color-gold: #a8801f;
+  --color-gold-ink: #7a5d11;
+  --color-gold-wash: #f3ecd9;
+
+  /* Punctuation. */
+  --color-obsidian: #111110;
+  --color-obsidian-2: #1c1c1a;
+  --color-obsidian-rule: #2e2e2a;
+  --color-on-obsidian: #f2f1ed;
+  --color-on-obsidian-2: #a6a49c;
+
+  /* Kept from the brand, darkened for a light ground. 7.9:1. */
+  --color-teal: #14574f;
+
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'Spline Sans Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  background: var(--color-paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink-2);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Figures are read by scanning a column, so they never reflow between rows. */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+}
+
+/* The field label of the document world: small, mono, tracked, uppercase. Used
+   for the name of a thing, never for the thing itself. */
+.field {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+.field-teal {
+  color: var(--color-teal);
+}
+
+/* Display type. Archivo tightens as it grows, the way a drawn title does. */
+.display {
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 1.04;
+  text-wrap: balance;
+  color: var(--color-ink);
+}
+
+.display-sm {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  text-wrap: balance;
+  color: var(--color-ink);
+}
+
+/* Body copy holds a 65-75 character measure. */
+.prose-measure {
+  max-width: 68ch;
+}
+
+/* The stamp. A drawing gets one, in the corner, and it is the only place a
+   large area of gold is allowed. */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-ink);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.55rem;
+}
+
+/* Hairline grid helpers. A 1px gap over a rule-coloured ground gives real
+   hairlines between cells at any column count, which a border cannot do without
+   doubling at the seams. */
+.hairline-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--color-rule);
+  border: 1px solid var(--color-rule);
+}
+
+.hairline-grid > * {
+  background: var(--color-paper);
+}
+
+.on-obsidian .hairline-grid {
+  background: var(--color-obsidian-rule);
+  border-color: var(--color-obsidian-rule);
+}
+
+.on-obsidian .hairline-grid > * {
+  background: var(--color-obsidian);
+}
+
+/* Card thumbnails.
+   Below `sm` a shot is a full-width banner and has to lose most of its height,
+   so each one declares where the crop should sit via `--focus`. From `sm` up the
+   shot sits in a side column that crops height rather than width, and the top of
+   the screen is always the right answer there. */
+.shot-crop {
+  object-position: var(--focus, 50% 0%);
+}
+
+@media (min-width: 40rem) {
+  .shot-crop {
+    object-position: 50% 0%;
+  }
+}
+
+::selection {
+  background: var(--color-gold-wash);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold-ink);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+/* The search field is a rule, not a box, so the rule itself carries focus.
+   An outline drawn around a full-width underline reads as a rendering bug. */
+.searchfield {
+  border: 0;
+  border-bottom: 1px solid var(--color-rule-strong);
+  background: transparent;
+  padding-bottom: 14px;
+}
+
+.searchfield:focus {
+  outline: none;
+  border-bottom-color: var(--color-gold);
+  box-shadow: 0 1px 0 0 var(--color-gold);
+}
+
+.searchfield::-webkit-search-cancel-button,
+.searchfield::-webkit-search-decoration {
+  appearance: none;
+  display: none;
+}
+
+/* One authored entrance, used on content that arrives after a keystroke, so the
+   result set reads as an answer rather than a repaint. Everything else on the
+   page is visible by default. */
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settle {
+  animation: settle 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* The scanline that runs under the hero screenshot once, on arrival: a plotter
+   drawing the sheet. Bounded, single pass, never loops. */
+@keyframes plot {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.plot {
+  animation: plot 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settle,
+  .plot {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

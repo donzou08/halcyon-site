@@ -1,0 +1,17 @@
+node_modules
+dist
+dist-ssr
+.vercel
+.env
+.env.*
+*.local
+.DS_Store
+*.log
+npm-debug.log*
+.vite
+.impeccable/hook.cache.json
+.impeccable/config.local.json
+
+# Rendered footage. Delivered as files, not carried in the repo.
+video/out/
+video/.tmp/

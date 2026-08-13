@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/((?!demos/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/demos/(.*)",
+      "headers": [{ "key": "X-Frame-Options", "value": "SAMEORIGIN" }]
+    }
+  ]
+}
