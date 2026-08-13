@@ -15,7 +15,7 @@
  *
  *   npm run build:all && npm run publish:theworks
  */
-import { cpSync, existsSync, rmSync, readdirSync } from 'node:fs'
+import { cpSync, copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -39,6 +39,50 @@ if (!existsSync(join(target, 'index.html'))) {
 rmSync(out, { recursive: true, force: true })
 cpSync(dist, out, { recursive: true })
 
+/**
+ * Give every client-side route a real index.html.
+ *
+ * The portfolio is a single page application, so `/theworks/quotation` is not a
+ * file, and normally the host is told to answer it with the shell. On this
+ * project that could not be made to work: with `cleanUrls` on, Vercel answers
+ * the missing file with a 404 before any rewrite runs, and the legacy `routes`
+ * array does not compose with `cleanUrls` either. Both failures look like a bad
+ * pattern and are neither.
+ *
+ * Writing the shell to each route sidesteps the question. Every URL becomes a
+ * real file, the filesystem serves it with no rule at all, and the router takes
+ * over once it loads. It costs a few kilobytes and it cannot silently break.
+ */
+const shell = join(out, 'index.html')
+
+// Only the systems. NICHES declares slugs too, and those are anchors on the
+// index rather than routes.
+const catalogue = readFileSync(join(root, 'src/data/catalogue.ts'), 'utf8')
+const systemsBlock = catalogue.slice(catalogue.indexOf('export const SYSTEMS'))
+const slugs = [...systemsBlock.matchAll(/^\s{4}slug: '([^']+)'/gm)].map((m) => m[1])
+
+if (slugs.length === 0) {
+  console.error('Found no system slugs in catalogue.ts. Routes would 404.')
+  process.exit(1)
+}
+
+const routes = [
+  'contact',
+  ...slugs,
+  // Shapes that exist in Instagram captions and LinkedIn posts already. The
+  // router redirects them; these exist so the server can hand the router the
+  // chance to.
+  'works',
+  ...slugs.map((s) => `works/${s}`),
+  ...slugs.map((s) => `system/${s}`),
+]
+
+for (const route of routes) {
+  const dir = join(out, route)
+  mkdirSync(dir, { recursive: true })
+  copyFileSync(shell, join(dir, 'index.html'))
+}
+
 const count = (dir) =>
   readdirSync(dir, { withFileTypes: true }).reduce(
     (n, e) => n + (e.isDirectory() ? count(join(dir, e.name)) : 1),
@@ -46,4 +90,5 @@ const count = (dir) =>
   )
 
 console.log(`Copied ${count(out)} files to ${out}`)
+console.log(`Wrote ${routes.length} route shells: ${routes.slice(0, 6).join(', ')}, ...`)
 console.log(`Commit them in ${target}, then push. Live at halcyon.uno/${mount}`)
