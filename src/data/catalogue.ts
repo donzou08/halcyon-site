@@ -8,6 +8,13 @@
  *    the ledger it does not go on this page. Systems with no ledger entry carry
  *    no numbers at all, which is the correct answer, not a gap to be filled.
  *
+ *    The counts here were read from the client's production databases on
+ *    **2026-08-04**, and the same figures appear on the case studies at
+ *    halcyon.uno/work. Two sites showing two different numbers for one system is
+ *    the failure this rule exists to prevent, so changing a figure here means
+ *    changing it in the ledger and on halcyon.uno in the same pass.
+ *    `₹47.54 cr` is **quoted** value, never won value.
+ *
  * 2. **Nothing here claims a client.** These read as the products Halcyon has
  *    built, which is true of all five. `provenance` is still recorded because it
  *    is what decides whether a system can carry figures, but it is no longer
@@ -163,9 +170,9 @@ export const SYSTEMS: System[] = [
       'HVAC installation',
     ],
     proof: [
+      { value: '₹47.54 cr', label: 'quoted through it' },
+      { value: '36', label: 'quotations issued' },
       { value: 'Under 1 minute', label: 'per quotation' },
-      { value: '40+', label: 'products priced' },
-      { value: '8', label: 'application categories' },
     ],
     searchTerms: [
       'quote',
@@ -265,8 +272,8 @@ export const SYSTEMS: System[] = [
       'Agricultural field staff',
     ],
     proof: [
-      { value: '28', label: 'team members active' },
-      { value: '23', label: 'sites tracked live' },
+      { value: '289', label: 'site visits logged' },
+      { value: '97', label: 'sites on the system' },
       { value: '100%', label: 'GPS verified' },
     ],
     searchTerms: [

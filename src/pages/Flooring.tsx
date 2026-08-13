@@ -110,9 +110,9 @@ export default function Flooring() {
           <div className="lg:col-span-5">
             <dl className="grid grid-cols-3 divide-x divide-rule border-t border-rule-strong">
               {[
-                { value: 'Under 1 min', label: 'per quotation, from an hour' },
-                { value: '23', label: 'sites tracked live' },
                 { value: '5 min', label: 'per tender scan, from 5 hours' },
+                { value: '₹47.54 cr', label: 'quoted through it' },
+                { value: '289', label: 'site visits logged' },
               ].map((f, i) => (
                 <div key={f.label} className={`pt-5 pb-1 ${i === 0 ? 'pr-3' : 'px-3'}`}>
                   <dt className="sr-only">{f.label}</dt>
@@ -128,8 +128,8 @@ export default function Flooring() {
               ))}
             </dl>
             <p className="mt-4 text-[0.75rem] leading-relaxed text-ink-3">
-              Measured on the contractor these were built for, in daily use. Method available on
-              request.
+              Counted on the contractor’s own production systems on 4 August 2026. Quoted value,
+              not won value. Method available on request.
             </p>
           </div>
         </Container>

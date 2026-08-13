@@ -376,6 +376,53 @@ console.log('\nMobile')
 }
 
 /* ------------------------------------------------------------------ *
+ * The published figures are exactly the ones in the ledger.
+ *
+ * This site and halcyon.uno/work both quote the same production counts, read on
+ * 2026-08-04. They drifted apart once already: this site carried 23 sites and
+ * 100% GPS while the case studies carried 97 and 92%, and a visitor crossing
+ * between them saw one system described two ways. Pinning the exact strings is
+ * the only thing that catches that, because both sets look perfectly reasonable
+ * on their own page.
+ *
+ * Changing a figure here means changing it in proof-ledger.md and on
+ * halcyon.uno in the same pass, and then changing this list.
+ * ------------------------------------------------------------------ */
+console.log('\nProof figures')
+{
+  const EXPECTED = {
+    '/supervisor': ['289', '97', '100%'],
+    '/quotation': ['₹47.54 cr', '36', 'Under 1 minute'],
+    '/tender': ['5 minutes', '129', '9'],
+  }
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await ctx.newPage()
+  for (const [path, values] of Object.entries(EXPECTED)) {
+    await page.goto(BASE + path, { waitUntil: 'networkidle' })
+    const text = await page.evaluate(() => document.body.innerText)
+    const missing = values.filter((v) => !text.includes(v))
+    missing.length === 0
+      ? pass(`${path} carries ${values.join(', ')}`)
+      : fail(`${path} is missing ${missing.join(', ')}`)
+  }
+
+  /* Retired figures must not come back from an old draft. 92% was published as
+     a weaker version of a capability claim; every check-in captures a location,
+     which is 100%. */
+  for (const path of ['/supervisor', '/', '/industrial-flooring']) {
+    await page.goto(BASE + path, { waitUntil: 'networkidle' })
+    const text = await page.evaluate(() => document.body.innerText)
+    const retired = ['92%', '23 sites tracked live', '28 team members'].filter((r) =>
+      text.includes(r),
+    )
+    retired.length === 0
+      ? pass(`${path} carries no retired figure`)
+      : fail(`${path} reinstated: ${retired.join(', ')}`)
+  }
+  await ctx.close()
+}
+
+/* ------------------------------------------------------------------ *
  * The flooring landing page reaches its three systems.
  *
  * It exists to send a flooring contractor into the tender, quotation and

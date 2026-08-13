@@ -84,7 +84,8 @@ export default function System() {
                   </dl>
                 </div>
                 <p className="mt-3 text-[0.78rem] leading-relaxed text-ink-3">
-                  Measured on the working system, not on this public version. Method available on
+                  Counted on the client’s production system on 4 August 2026, not on this public
+                  version. Any rupee figure is quoted value, not won value. Method available on
                   request.
                 </p>
               </div>
