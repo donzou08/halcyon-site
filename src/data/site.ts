@@ -20,18 +20,31 @@ export const CONTACT = {
   site: 'https://halcyon.uno',
 
   /**
-   * Shown as a tel: link, and used for the WhatsApp link, when set. Every
-   * surface that would show either is behind the flags below and simply omits
-   * the row while it is empty, because a wrong number on a live site sends
-   * enquiries to a stranger.
+   * The number, in one place.
    *
-   * Write it as it should read, for example '+91 98765 43210'.
+   * This is the only line to change when the number changes. It drives the
+   * WhatsApp button in the header of every page, the WhatsApp and phone rows on
+   * /contact, the footer, and the button at the bottom of every system page.
+   * Nothing else hard-codes it.
+   *
+   * Write it as it should read, for example '+91 98765 43210'. The country code
+   * matters: the WhatsApp link is built from the digits, and wa.me will not open
+   * a chat without one.
    */
   phone: '+91 91760 88866',
 
   /**
-   * The WhatsApp number, if it differs from the one above. Leave empty to use
-   * `phone` for both.
+   * A separate WhatsApp number, for when the two differ.
+   *
+   * Empty means WhatsApp uses `phone` above, which is the case today: the number
+   * is Sanjith's personal one. When a business number arrives, the choice is:
+   *
+   * - **Business WhatsApp, personal phone stays private:** put the new number
+   *   here and leave `phone` alone. The site then shows the business number for
+   *   WhatsApp and the personal one for calls, which is probably not what you
+   *   want.
+   * - **Business number for everything:** change `phone` and leave this empty.
+   *   That is the usual answer, and it is one line.
    */
   whatsapp: '',
 

@@ -393,6 +393,23 @@ console.log('\nContact routes')
     Array.from(document.querySelectorAll('a[href]')).map((a) => a.getAttribute('href')),
   )
 
+  /* The header button is checked on a system page rather than /contact,
+     because it has to be there on every page. The bottom-of-page WhatsApp
+     links sit around 4000px down, which is not a route to anything: the whole
+     point of this one is that it is reachable without scrolling. */
+  {
+    const hdr = await page.evaluate(() => {
+      const a = document.querySelector('header a[href*="wa.me"]')
+      if (!a) return null
+      const r = a.getBoundingClientRect()
+      return { top: Math.round(r.top), visible: r.width > 0 && r.height > 0, svg: !!a.querySelector('svg') }
+    })
+    if (!hdr) fail('no WhatsApp button in the header')
+    else if (!hdr.visible || hdr.top > 120) fail(`header WhatsApp button is not reachable (top ${hdr.top})`)
+    else if (!hdr.svg) fail('header WhatsApp button has no glyph')
+    else pass(`WhatsApp button sits in the header (${hdr.top}px from the top)`)
+  }
+
   const tel = hrefs.filter((h) => h.startsWith('tel:'))
   const wa = hrefs.filter((h) => h.includes('wa.me'))
   const mail = hrefs.filter((h) => h.startsWith('mailto:'))
@@ -418,12 +435,18 @@ console.log('\nContact routes')
   // The message a system page sends should name that system, or the first
   // thing Sanjith sees is an unknown number saying nothing.
   await page.goto(BASE + '/supervisor', { waitUntil: 'networkidle' })
-  const sysWa = await page.evaluate(
-    () => document.querySelector('a[href*="wa.me"]')?.getAttribute('href') ?? '',
+  // Every one of them, not just the first: the header, the closing button and
+  // the footer are three separate entry points and all three should arrive
+  // saying what the visitor was reading.
+  const sysWa = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('a[href*="wa.me"]')).map((a) => a.getAttribute('href')),
   )
-  decodeURIComponent(sysWa).includes('Field Supervisor')
-    ? pass('a system page pre-fills the message with its own name')
-    : fail(`system WhatsApp link does not name the system: ${sysWa.slice(0, 90)}`)
+  const generic = sysWa.filter((h) => !decodeURIComponent(h).includes('Field Supervisor'))
+  sysWa.length === 0
+    ? fail('no WhatsApp link on a system page')
+    : generic.length
+      ? fail(`${generic.length} of ${sysWa.length} WhatsApp links do not name the system`)
+      : pass(`all ${sysWa.length} WhatsApp links on a system page name it`)
 
   await ctx.close()
 }
