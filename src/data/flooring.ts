@@ -2,18 +2,23 @@
  * The industrial flooring landing page.
  *
  * A vertical page for one trade, and the only page on this site written to be
- * read by a person who already knows their business better than we do. That
- * changes what it can say. Generic operations copy ("streamline your workflow")
- * reads as someone who has never stood on a site; naming a CSP profile, a
- * moisture reading or the order of coats reads as someone who has. So the page
- * is built out of the trade's own vocabulary, and every detail in it is taken
- * from the three applications themselves rather than invented for the page.
+ * read by somebody who knows the subject better than we do. That changes what it
+ * can say. Generic operations copy reads as somebody who has never stood on a
+ * site; naming the coat order, the coverage categories or the way a serial rolls
+ * at the financial year reads as somebody who has.
  *
- * **Nothing here is a market statistic.** The observations about where money
- * leaks are descriptions of the work, not research findings dressed as facts,
- * because a figure that cannot be defended in a meeting costs more than every
- * figure that can. The only numbers on the page come from the proof ledger, via
- * the catalogue.
+ * **Everything here is taken from the two systems actually running in
+ * production**, not from the public demos, which are simplified rebuilds. Where
+ * the two differ, this file follows production, because the page is describing
+ * what gets built rather than what is embedded below it.
+ *
+ * **No market statistics.** The observations about where money leaks describe
+ * the work, not research dressed as fact. The only numbers on the page come from
+ * the proof ledger, through the catalogue.
+ *
+ * **No real end-client names.** The production system carries the actual
+ * factories it is deployed across. Those never appear here, exactly as the demos
+ * wear invented companies.
  */
 
 export interface Leak {
@@ -21,137 +26,191 @@ export interface Leak {
   slug: string
   stage: string
   title: string
-  /** The pain, in the owner's language. Not a feature. */
   body: string
-  /** What it costs when it goes wrong. */
   cost: string
 }
 
 /**
- * The spine of the page: three places a flooring contract loses money, in the
- * order they happen. Each maps to one of the three systems, which is why this
- * trade gets a page of its own rather than a card.
+ * The spine: three places a flooring contract loses money, in the order they
+ * happen. Each maps to one system, which is why this trade gets a page.
  */
 export const LEAKS: Leak[] = [
   {
     slug: 'tender',
     stage: 'Finding the job',
-    title: 'The tenders you never saw',
+    title: 'The tender that closed before anyone opened it',
     body: 'Public flooring work is posted across portals that do not talk to each other, and several put a CAPTCHA in front of the list. Checking them properly is most of a morning, so in practice it happens on a Monday, or when somebody remembers.',
-    cost: 'A job closes unseen. The ones you do see still have to be read in full before you can tell that the turnover threshold or the registration class rules you out.',
+    cost: 'A job closes unseen. The ones you do open still have to be read in full before the turnover threshold or the registration class tells you it was never yours.',
   },
   {
     slug: 'quotation',
     stage: 'Pricing the job',
-    title: 'The quote that took an hour and left out the primer',
-    body: 'Rates live in a spreadsheet, the document lives in Word, and the version that reached the customer is whichever was saved last. Surface preparation gets forgotten on the fast ones. Filler for undulations gets estimated from memory.',
-    cost: 'A margin decided by whoever typed it. Three weeks later nobody can say what the job was quoted at, or which revision the customer is holding.',
+    title: 'An hour of retyping, and the primer left off',
+    body: 'Rates live in a spreadsheet, the document lives in Word, and the version that reached the customer is whichever was saved last. Surface preparation gets forgotten on the fast ones. Filler for undulations gets guessed.',
+    cost: 'A margin set by whoever typed it. Three weeks on, nobody can say what the job was quoted at, or which of the four revisions the customer is holding.',
   },
   {
     slug: 'supervisor',
     stage: 'Running the job',
-    title: 'A site you find out about in the evening',
-    body: 'Updates arrive as photographs in a WhatsApp group with no location, no time and no order to them. Working out whether a site moved today means scrolling back through a thousand messages or ringing four people.',
-    cost: 'Rework, found late. It never shows up as a labour problem in the accounts, because nobody compared the hours quoted with the hours spent.',
+    title: 'A site you hear about in the evening',
+    body: 'Updates arrive as photographs in a WhatsApp group with no location, no time and no order to them. Working out whether a site moved today means scrolling back through a thousand messages, or ringing four people.',
+    cost: 'Rework, found late. It never shows up as a labour problem in the accounts, because nobody compared the area quoted with the area actually laid.',
   },
 ]
 
-export interface TradeDetail {
+export interface Feature {
   label: string
   body: string
 }
 
 /**
- * The section that does the actual persuading.
+ * The Quotation Engine, in the depth the production system deserves.
  *
- * Every line is something the software already handles and a contractor would
- * have to explain to any general-purpose tool. This is what separates a system
- * built for the trade from one configured for it, and it is checkable: all of it
- * is visible in the demos on this page.
+ * Two things sell it and neither is "it makes a PDF". The first is that the
+ * document is the one they already send, down to the letterhead artwork and the
+ * page geometry. The second is that every quote is kept, which turns a folder of
+ * Word files into something you can ask questions of.
  */
-export const KNOWS_THE_TRADE: TradeDetail[] = [
+export const QUOTATION_DEPTH: Feature[] = [
   {
-    label: 'The rate card is your systems, not line items',
-    body: 'Eight of them, from a 300 micron roller-applied coating at the light end to 6mm PU concrete for wet process areas, with 2mm, 3mm and 5mm epoxy self-levelling in between. Thickness is part of the product, not a note in the description.',
+    label: 'The PDF is the document you already send',
+    body: 'Not a template that resembles it. The real letterhead artwork sits in the file, and the page geometry is taken from the master quotation shell the company was already using, so the margins and banners land where they always did. A customer receiving it cannot tell it came from software.',
   },
   {
-    label: 'ESD, anti-skid and densifier are priced like everything else',
-    body: 'A conductive grid with earthing for a clean room and a broadcast aggregate finish for a loading ramp are different jobs at different rates, and both sit in the same rate card as the epoxy.',
+    label: 'It carries everything a quotation legally needs',
+    body: 'GSTIN and SAC code, CGST and SGST or IGST at the rates you set, the basic amount, a round-off line of its own, bank name, branch, account number and IFSC for payment, your payment terms, validity in days, and the signatory’s name, title and phone.',
   },
   {
-    label: 'Square feet and square metres, both, at once',
-    body: 'Drawings arrive in one and rates are quoted in the other. The area is entered in whichever unit the site gave you and the quote prints in the one the customer expects, converted rather than retyped.',
+    label: 'Serial numbers that behave like your books',
+    body: 'A configurable prefix, the division, the number, and the Indian financial year, rolling at April so it reads 26-27 from June. Every revision keeps the serial, so a quote reissued four times is still one quote with four versions rather than four quotes.',
   },
   {
-    label: 'GST decided by where the site is',
-    body: 'Within Tamil Nadu it splits into CGST and SGST. Outside it, IGST. The customer record carries the site, so the split is a consequence of the address rather than a decision somebody has to remember to make.',
+    label: 'Past quotes is the part nobody expects',
+    body: 'Every quotation ever raised, in one list, showing the latest version of each serial. Filter by company, site location, division, brand, salesperson or date range, and the total value and the count for this week, this month and this year move with the filter.',
   },
   {
-    label: 'Filler and line marking are add-ons, because they are',
-    body: 'Undulations and potholes are priced by the kilogram of filler compound, separately from area. Safety line marking is a switch, not a renegotiation. Both are the items most often left off a fast quote.',
+    label: 'The pipeline you did not know you had',
+    body: 'Because the quotes are kept, the value of everything quoted and not yet won is a number rather than a feeling. What was sent to whom, when, at what price, and whether anyone followed it up.',
   },
   {
-    label: 'The stages are the stages',
-    body: 'Surface preparation, primer, screed or body coat, top coat, line marking. A supervisor closing a visit picks the stage actually reached, and the owner sees progress against those five rather than a percentage somebody guessed.',
+    label: 'Export to Excel for anyone who wants Excel',
+    body: 'One row per line item, so the product, quantity and rate are meaningful and the sheet pivots. Quote-level identifiers repeat on every row; the money appears only on the first row of each quote, so a summed column cannot double count.',
   },
   {
-    label: 'Completion is measured in area, not in ticks',
-    body: 'A visit cannot be closed without a figure for what was coated or how much material went down. That is what the progress percentage is built from, so it cannot drift away from the work.',
+    label: 'Priced the way a resin floor is actually built',
+    body: 'Layer by layer. Primer by coverage rate, filler by the kilogram, screed and top coat by area times thickness times the density of that particular material. Change a thickness and the quantity follows, because it is the same arithmetic your estimator does by hand.',
   },
   {
-    label: 'It runs on the phone the supervisor already has',
-    body: 'The field app is built for a mid-range Android on a patchy connection, standing on a floor, because a tool that needs a desk is a tool that gets filled in from memory at the end of the week.',
+    label: 'Customers, sites and their own prices',
+    body: 'A company has sites; a site has an address, a state, a delivery address and its own contact. Prices can be overridden per customer, so the one who negotiated a rate two years ago keeps it without anybody having to remember.',
   },
 ]
 
-export interface FloorSystem {
-  name: string
-  detail: string
-}
-
-/** The rate card, exactly as the Quotation Engine carries it. */
-export const RATE_CARD: FloorSystem[] = [
-  { name: '300 Micron Epoxy Coating', detail: 'Two-coat roller-applied, light traffic' },
-  { name: '2mm Epoxy Self-Levelling', detail: 'Seamless self-smoothing screed' },
-  { name: '3mm Epoxy Self-Levelling', detail: 'Heavier build for forklift traffic' },
-  { name: '5mm Epoxy Self-Levelling', detail: 'Heavy-duty, impact-loaded bays' },
-  { name: '6mm PU Concrete', detail: 'Thermal shock and chemicals, wet process' },
-  { name: '2mm ESD Anti-Static', detail: 'Conductive grid with earthing' },
-  { name: '1mm Anti-Skid', detail: 'Broadcast aggregate, ramps and wet zones' },
-  { name: 'Floor Hardener / Densifier', detail: 'Lithium silicate with mechanical polish' },
+/**
+ * The Field Supervisor, in production depth.
+ *
+ * The demo shows check-in and check-out. The running system is a great deal more
+ * than that, and the parts that matter most to an owner are the ones that turn
+ * a day of work into a number he can act on without asking anybody.
+ */
+export const SUPERVISOR_DEPTH: Feature[] = [
+  {
+    label: 'A name and a four digit PIN',
+    body: 'No email address, no password reset, no app store. It installs to the home screen like an app and signs in the way a supervisor expects a phone to work. That decision is why it is used, and it was not a small one.',
+  },
+  {
+    label: 'Progress is calculated from area, not estimated',
+    body: 'Each stage is complete to the extent of the coverage logged against it, divided by the site area. The overall figure is the average of the stages, so it can never disagree with the breakdown underneath it. Nobody drags a slider.',
+  },
+  {
+    label: 'And it shows you the arithmetic',
+    body: 'A separate page sets out how the number was reached, stage by stage, and checks it against the target date for that stage so a site that is behind says so. A progress figure nobody can interrogate is a progress figure nobody believes.',
+  },
+  {
+    label: 'Coverage totals across every site',
+    body: 'Primer, screed, top coat, yellow line, filling and oil removal, each with its thickness and quantity, added up for today, this week and this month. That is the number that tells you whether the month was busy, and it is a by-product of checking out.',
+  },
+  {
+    label: 'The work day, not just the visit',
+    body: 'It starts from home and ends at home, so travel is the sum of the legs home to site to site to home, with a road factor over the straight line. Overnight work rolls into the right day. Holiday and rest days block check-in. Travel compensation stops being an argument.',
+  },
+  {
+    label: 'Stock on site, and when it runs low',
+    body: 'Material, consumable, tool and machinery, with what was there and what is left. A low reading flags itself, which is cheaper than a team standing on a floor waiting for a drum.',
+  },
+  {
+    label: 'Issues that are quality or safety, and get closed',
+    body: 'Raised on site with photographs, acknowledged by the owner, then resolved or dismissed on the record. Not a message in a group that scrolls away by Thursday.',
+  },
+  {
+    label: 'The daily report writes itself, and goes out on WhatsApp',
+    body: 'One tap at the end of the day. Everything the owner exports, in a branded PDF or a full Excel workbook, is customer-facing and carries no emoji, because some of it gets forwarded.',
+  },
 ]
 
-/** The five stages the Field Supervisor tracks a job through. */
-export const STAGES = [
-  'Surface preparation',
-  'Primer',
-  'Screed / body coat',
-  'Top coat',
-  'Line marking',
+/**
+ * How a system is actually made.
+ *
+ * The correction that prompted this section: nothing "ships with" a rate card.
+ * A page that lists one implies a product with a fixed catalogue, which is the
+ * opposite of what is being sold and would be caught out in the first meeting.
+ */
+export const BUILT_FROM_YOURS: Feature[] = [
+  {
+    label: 'Your systems and your brands',
+    body: 'The products in the demo belong to the contractor it was built for. Yours are different: your material brands, your build-ups, your densities, your thicknesses. They go in as they are, and they are editable afterwards without calling us.',
+  },
+  {
+    label: 'Your rates, and your exceptions',
+    body: 'Including the ones that are not on any list. The customer with a rate agreed two years ago, the division that prices differently, the job that carries a support commitment because it is going overseas.',
+  },
+  {
+    label: 'Your document',
+    body: 'Send the quotation you send today. The output is built to match it, on your letterhead, with your terms, your bank details and your signature block, so nothing about the way you look to a customer changes.',
+  },
+  {
+    label: 'Your stages',
+    body: 'A resin floor is not the only way to build a floor. The stages a job moves through are set per site, with a target date each, and the progress calculation follows whatever you set rather than a fixed list.',
+  },
 ]
+
+/** One contractor's rate card. Shown as an example, never as a catalogue. */
+export const EXAMPLE_RATE_CARD: Feature[] = [
+  { label: '300 Micron Epoxy Coating', body: 'Two-coat roller-applied, light traffic' },
+  { label: '2mm Epoxy Self-Levelling', body: 'Seamless self-smoothing screed' },
+  { label: '3mm Epoxy Self-Levelling', body: 'Heavier build for forklift traffic' },
+  { label: '5mm Epoxy Self-Levelling', body: 'Heavy-duty, impact-loaded bays' },
+  { label: '6mm PU Concrete', body: 'Thermal shock and chemicals, wet process' },
+  { label: '2mm ESD Anti-Static', body: 'Conductive grid with earthing' },
+  { label: '1mm Anti-Skid', body: 'Broadcast aggregate, ramps and wet zones' },
+  { label: 'Floor Hardener / Densifier', body: 'Lithium silicate with mechanical polish' },
+]
+
+/** The stages the Field Supervisor tracks a job through, in one contractor's setup. */
+export const STAGES = ['Surface preparation', 'Primer', 'Screed / body coat', 'Top coat', 'Line marking']
 
 /**
  * What it does not do.
  *
  * On a page aimed at people who have been sold software before, the limits are
- * more persuasive than the features. Every one of these is true, and saying it
- * first is cheaper than being caught on it in a meeting.
+ * more persuasive than the features, and saying them first is cheaper than being
+ * caught on them in a meeting.
  */
-export const LIMITS: TradeDetail[] = [
+export const LIMITS: Feature[] = [
   {
     label: 'It is not accounting software',
-    body: 'It does not file returns and it does not replace Tally. It produces the quotation and the site record that your accounts are built from.',
+    body: 'It does not file returns and it does not replace Tally. It produces the quotation and the site record your accounts are built from.',
   },
   {
     label: 'It does not price the job for you',
-    body: 'The rates are yours and the judgement stays yours. What it removes is the retyping, the arithmetic and the chance of sending last month’s rate.',
+    body: 'The rates are yours and the judgement stays yours. What goes is the retyping, the arithmetic, and the chance of sending last year’s rate.',
   },
   {
     label: 'It cannot fix a rate card that is wrong',
-    body: 'If the rate is short, the quote is short, faster. Getting the rate card right is the first conversation, and it is usually the valuable one.',
+    body: 'If the rate is short, the quote is short, faster. Getting that right is the first conversation, and it is usually the valuable one.',
   },
   {
     label: 'The demos here are not your system',
-    body: 'They are the shape of it, running on invented data for an invented flooring company. Yours would be built from your rate card, your stages and your paperwork.',
+    body: 'They are the shape of it, on invented data for an invented company. Yours is built from your rate card, your stages and your paperwork.',
   },
 ]

@@ -47,13 +47,32 @@ export default function Home() {
             </h1>
             <p className="prose-measure mt-6 text-[1.05rem] leading-relaxed text-ink-2">
               Halcyon builds operational software to order, one business at a time. Every system
-              below is the actual application rather than a picture of one. It runs in your browser,
-              filled with invented data, so you can press anything without breaking anything.
+              below is the actual application rather than a picture of one. It runs in your browser
+              on invented data, so you can press anything without breaking anything.
             </p>
-            <p className="prose-measure mt-4 text-[0.95rem] leading-relaxed text-ink-3">
-              Use them the way your people would. Start by searching for what you do, or for the job
-              you keep doing twice.
-            </p>
+
+            {/* Two ways in, stated plainly. A visitor who knows what they want
+                should not have to work out that the list on the right is
+                clickable, and a visitor who does not should be told the field
+                understands their trade rather than just product names. */}
+            <div className="mt-8 border-t border-rule-strong pt-6">
+              <span className="field field-teal">Two ways to use this page</span>
+              <ol className="mt-4 space-y-3">
+                <li className="grid grid-cols-[1.4rem_1fr] gap-x-3">
+                  <span className="num text-[0.8rem] text-gold-ink">01</span>
+                  <span className="text-[0.93rem] leading-relaxed text-ink-2">
+                    Search for your trade, or for the job you keep doing twice. It knows trades we
+                    have never worked in.
+                  </span>
+                </li>
+                <li className="grid grid-cols-[1.4rem_1fr] gap-x-3">
+                  <span className="num text-[0.8rem] text-gold-ink">02</span>
+                  <span className="text-[0.93rem] leading-relaxed text-ink-2">
+                    Or pick one of the five from the list and open it.
+                  </span>
+                </li>
+              </ol>
+            </div>
 
             <div className="mt-9">
               <SearchField value={query} onChange={setQuery} />
@@ -93,7 +112,8 @@ export default function Home() {
           </div>
 
           <div className="lg:col-span-5">
-            <ul className="border-t border-rule-strong">
+            <span className="field">The five systems</span>
+            <ul className="mt-3 border-t border-rule-strong">
               {SYSTEMS.map((s) => (
                 <li key={s.slug}>
                   <Link
@@ -147,6 +167,17 @@ export default function Home() {
             )
           ) : (
             <div className="space-y-20">
+              <div className="border-t border-rule-strong pt-5">
+                <div className="flex items-baseline gap-4">
+                  <span className="num text-[0.85rem] text-gold-ink">01</span>
+                  <span className="field field-teal">Grouped by the trade they were built for</span>
+                </div>
+                <p className="prose-measure mt-4 text-[0.98rem] leading-relaxed text-ink-2">
+                  The headings are industries because that is how people look. The systems
+                  underneath them are not industry software: what transfers between trades is the
+                  shape of the problem, which is what the search field is matching on.
+                </p>
+              </div>
               {NICHES.map((niche) => {
                 const systems = SYSTEMS.filter((s) => s.niche === niche.slug)
                 if (systems.length === 0) return null
@@ -191,7 +222,10 @@ export default function Home() {
           {/* ---------------------------------------------- How to read it */}
           <section className="border-t border-rule">
             <Container className="py-16">
-              <span className="field field-teal">How to read this page</span>
+              <div className="flex items-baseline gap-4">
+                <span className="num text-[0.85rem] text-gold-ink">02</span>
+                <span className="field field-teal">How to read this page</span>
+              </div>
               <div className="hairline-grid mt-8 md:grid-cols-3">
                 <Note title="Grouped by trade, useful by workflow">
                   The headings above are industries because that is how people look. The systems
@@ -213,7 +247,10 @@ export default function Home() {
             <Container>
               <div className="grid gap-10 lg:grid-cols-12">
                 <div className="lg:col-span-7">
-                  <span className="field text-gold">What it costs</span>
+                  <div className="flex items-baseline gap-4">
+                    <span className="num text-[0.85rem] text-gold">03</span>
+                    <span className="field text-gold">What it costs</span>
+                  </div>
                   <h2 className="display mt-4 text-[1.9rem] text-on-obsidian sm:text-[2.5rem]">
                     {PRICING_STANCE.heading}
                   </h2>
