@@ -1,7 +1,10 @@
-# Halcyon
+# The Halcyon Works
 
-The Halcyon website. Marketing pages, the portfolio portal, and five working
-applications, on one origin and one deploy.
+The Halcyon portfolio: five working applications, each one running rather than
+pictured, on one origin and one deploy.
+
+This is **not** the company website. `halcyon.uno` is, and it is unchanged. This
+is built to be mounted at `halcyon.uno/works`, which is why every route is flat.
 
 Nothing here is client data.
 
@@ -11,31 +14,30 @@ Nothing here is client data.
 
 | Route | What it is |
 | --- | --- |
-| `/` | Home. The claim, a live product screen, the index, the production proof |
-| `/works` | The portal. Search by trade or by the job, then the catalogue |
-| `/works/:slug` | One system: title block, the running demo, what it replaces |
-| `/approach` | How the work happens, and straight answers to the awkward questions |
-| `/engagements` | The rate card |
-| `/contact` | A three-step intake that posts to Formspree and a Google Sheet |
+| `/` | The work. Search by trade or by the job, then the catalogue |
+| `/:slug` | One system: title block, the running demo, what it replaces |
+| `/contact` | WhatsApp, phone, email, and a three-step intake |
 | `/demos/:slug/` | The five applications, served as static sub-apps |
 
-`/system/:slug` redirects to `/works/:slug`, because that shape is in Instagram
-captions and LinkedIn posts that cannot be edited.
+`/works/:slug` and `/system/:slug` both redirect to `/:slug`, because those
+shapes are in Instagram captions and LinkedIn posts that cannot be edited.
 
 ---
 
 ## The five systems
 
-| System | Sector | Provenance | Demo |
-| --- | --- | --- | --- |
-| **Quotation Engine** | Industrial flooring | Running in production | `/demos/quotation/` |
-| **Field Supervisor** | Industrial flooring | Running in production | `/demos/supervisor/` |
-| **Tender Intelligence** | Industrial flooring | In progress | `/demos/tender/` |
-| **Production Counting** | Manufacturing and foundry | Demonstration | `/demos/foundry/` |
-| **Command Center** | Any business | Demonstration | `/demos/command-center/` |
+| System | Built around | Demo |
+| --- | --- | --- |
+| **Quotation Engine** | Industrial flooring | `/demos/quotation/` |
+| **Field Supervisor** | Industrial flooring | `/demos/supervisor/` |
+| **Tender Intelligence** | Industrial flooring | `/demos/tender/` |
+| **Production Counting** | Manufacturing and foundry | `/demos/foundry/` |
+| **Command Center** | Any business | `/demos/command-center/` |
 
-**Provenance is stated on every card and never implied.** Three rebuild systems
-running for a real client; two have not been deployed for anyone.
+**No status labels.** Nothing says live, in production or demonstration. These
+read as the products Halcyon has built, which is true of all five, and nothing on
+the page claims a client for any of them. The figures that appear are the ones
+that can be defended in a meeting; the systems without them carry none.
 
 ---
 
@@ -91,10 +93,10 @@ two scrolls apart.
 halcyon-site/
 ├── src/
 │   ├── data/catalogue.ts     every system, its copy, its tags, its proof, its shots
-│   ├── data/site.ts          contact, engagements, the production systems
+│   ├── data/site.ts          contact routes, the pricing stance
 │   ├── lib/search.ts         the scoring
 │   ├── components/           chrome, search, cards, plates, the demo frame
-│   └── pages/                Home, Works, System, Approach, Engagements, Contact, NotFound
+│   └── pages/                Home, System, Contact, NotFound
 ├── demos/                    five independent Vite apps, each with its own deps
 ├── public/demos/             their built output, committed
 ├── public/shots/             captured product screenshots, committed
@@ -143,11 +145,12 @@ Then commit the changed files under `public/demos/` and `public/shots/`.
 node scripts/check.mjs
 ```
 
-Drives a real browser over the site: every page renders and requests nothing
-that 404s, every demo boots inside its frame, every screenshot decodes, search
-returns the right system for every suggestion chip and a dozen other queries,
-the contact form walks its three steps and refuses to skip one, and no page
-scrolls sideways on a phone.
+Sixty checks in a real browser: every page renders and requests nothing that
+404s, old links still redirect, every demo boots inside its frame and opens full
+screen on a phone, every screenshot decodes, search returns the right system for
+every suggestion chip and a dozen other queries, the contact form walks its three
+steps and refuses to skip one, no page scrolls sideways on a phone, and no page
+carries a status label or a price.
 
 ---
 
@@ -163,10 +166,10 @@ Import the repo at vercel.com/new. Vite is detected automatically. `vercel.json`
 already carries the SPA rewrite that excludes `/demos/`, and the
 `X-Frame-Options: SAMEORIGIN` header on the demos.
 
-**The domain move is deliberate and manual.** `halcyon.uno` currently points at
-the old `halcyon-website` project. Deploy this, look at the preview URL, and move
-the domain only when you are happy. The old site stays live and untouched until
-then.
+**This does not take the halcyon.uno domain.** halcyon.uno stays on the
+`halcyon-website` project. When you want this under `halcyon.uno/works`, add a
+rewrite on the halcyon.uno project pointing `/works/:path*` at this deployment;
+until then it lives on its own Vercel URL and is linked from the header.
 
 ---
 
@@ -177,12 +180,12 @@ then.
 - **Figures come from `halcyon-studio/brand/proof-ledger.md`,** verbatim, not
   rounded and never converted to a percentage. Systems with no ledger entry carry
   no numbers, which is the correct answer rather than a gap to be filled.
+- **No prices.** Work is quoted on the complexity of the job, after the workflow
+  is mapped. `check.mjs` fails if a rupee figure appears in the shell.
 - **No em dashes in visible copy.** The one exception is the demos' own
   `DEMO — SAMPLE DATA` badge, quoted as it is.
 - **No gradients, drop shadows, glow or icons.** Gold marks the primary action
   and the figure that matters, never a large fill.
-- **Nothing mentions WhatsApp.** The advertisement decides that; the site is a
-  website.
 - Client demos wear the client's identity. Only the Command Center wears
   Halcyon's own obsidian and gold, because it is the one system here that is
   Halcyon's rather than a client's.

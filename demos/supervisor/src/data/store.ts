@@ -460,7 +460,7 @@ export function simulateCheckOut(): { ok: boolean; message: string } {
   const site = getSite(active.siteId)
   const sup = getSupervisor(active.supervisorId)
   checkOut(active.id, {
-    actualWork: `${active.targetWork.replace(/\.$/, '')} — completed as planned.`,
+    actualWork: `${active.targetWork.replace(/\.$/, '')}, completed as planned.`,
     stageReached: site?.stages[1] ?? '',
     coverage: [{ category: 'primer', qty: Math.round((site?.areaSqm ?? 500) * 0.35), unit: 'sqm', thicknessMm: null }],
     incompleteReason: '',

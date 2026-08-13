@@ -12,14 +12,14 @@ export default function NotFound() {
         </h1>
         <p className="prose-measure mt-5 text-[1.02rem] leading-relaxed text-ink-2">
           The link may be old, or it may be a typo. Everything on this site is one of the five
-          systems below, or one of four pages.
+          systems below, or the contact page.
         </p>
 
         <ul className="mt-10 max-w-2xl border-t border-rule-strong">
           {SYSTEMS.map((s) => (
             <li key={s.slug}>
               <Link
-                to={`/works/${s.slug}`}
+                to={`/${s.slug}`}
                 className="flex items-baseline justify-between gap-4 border-b border-rule py-4 transition-colors hover:text-gold-ink"
               >
                 <span className="text-[1rem] text-ink">{s.name}</span>
@@ -34,13 +34,13 @@ export default function NotFound() {
             to="/"
             className="border border-ink bg-ink px-7 py-4 text-[0.95rem] font-500 text-paper transition-colors hover:bg-transparent hover:text-ink"
           >
-            Back to the start
+            Back to the work
           </Link>
           <Link
-            to="/works"
+            to="/contact"
             className="border border-rule-strong px-7 py-4 text-[0.95rem] font-500 text-ink transition-colors hover:border-ink"
           >
-            The Works
+            Start a conversation
           </Link>
         </div>
       </Container>

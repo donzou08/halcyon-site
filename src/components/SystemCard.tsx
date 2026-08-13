@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { PROVENANCE_LABEL, type System } from '../data/catalogue'
+import { nicheBySlug, type System } from '../data/catalogue'
 
 /**
  * One system, as a row in a catalogue.
@@ -10,16 +10,20 @@ import { PROVENANCE_LABEL, type System } from '../data/catalogue'
  * of each that is worth seeing. And on the search page a ranked list of rows is
  * the shape an answer already has.
  *
- * The image leads. The previous version of this site led with prose, which asked
- * a stranger to take on trust that working software existed. The plate is the
- * proof; the words explain it.
+ * The image leads. An earlier version led with prose, which asked a stranger to
+ * take on trust that working software existed. The screenshot is the proof; the
+ * words explain it.
+ *
+ * **No status badge.** These read as the products Halcyon has built, and
+ * labelling each one live, in progress or a demonstration turned a portfolio
+ * into a status board. Nothing here claims a client either way, so nothing needs
+ * qualifying: the figures that appear are the ones that can be defended, and the
+ * systems without them simply carry none.
  *
  * **The two shot shapes get different layouts, deliberately.** A phone screen
- * stays beside the text at every width, because letterboxing a 390x844 image
- * into a full-width mobile banner leaves two grey margins and shows a
- * hundred-pixel sliver of the app. A desktop screen does the opposite: it is a
- * banner on mobile, where its width is the whole point, and a column beside the
- * text once there is room.
+ * stays beside the text from `sm` up. Below that both are a banner, because
+ * letterboxing a 390x844 image into a full-width mobile column leaves two grey
+ * margins and a hundred-pixel sliver of the app.
  */
 export function SystemCard({
   system,
@@ -31,19 +35,14 @@ export function SystemCard({
 }) {
   const shot = system.shots[0]
   const isPhone = shot?.kind === 'phone'
+  const niche = nicheBySlug(system.niche)
 
   return (
     <article className="group relative border border-rule bg-raised transition-colors hover:border-rule-strong">
       <div className="flex flex-col sm:flex-row">
         {/* The image is positioned rather than flowed, so the text decides how
-            tall the row is. Left in the flow, a 390x844 phone screen at a
-            200px column width forces a 433px row and leaves the middle of the
-            card empty for most of its height.
-
-            Below the `sm` breakpoint every shot is a banner. A phone screen in a
-            narrow side column on a 390px viewport ends up about a fifth as wide
-            as it is tall, and `object-cover` answers that by throwing away half
-            the width, which slices the app's own text down the middle. */}
+            tall the row is. Left in the flow, a 390x844 phone screen in a 200px
+            column forces a 433px row and empties the card across the middle. */}
         {shot && (
           <div
             className={`relative h-[184px] shrink-0 self-stretch overflow-hidden border-b border-rule bg-sunk sm:h-auto sm:border-r sm:border-b-0 ${
@@ -68,12 +67,12 @@ export function SystemCard({
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               <span className="field">{system.code}</span>
               <span className="h-3 w-px bg-rule-strong" aria-hidden="true" />
-              <Provenance system={system} />
+              <span className="field">{niche?.name ?? ''}</span>
             </div>
 
             <h3 className="display-sm mt-3 text-[1.25rem] sm:text-[1.5rem]">
               <Link
-                to={`/works/${system.slug}`}
+                to={`/${system.slug}`}
                 className="after:absolute after:inset-0 after:content-['']"
               >
                 {system.name}
@@ -98,10 +97,9 @@ export function SystemCard({
               </div>
             )}
 
-            <div className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-5">
-              <span className="text-[0.76rem] text-ink-3">Branded for {system.client}</span>
+            <div className="mt-auto pt-5">
               <span className="relative z-10 text-[0.85rem] font-500 text-ink transition-colors group-hover:text-gold-ink">
-                Open the system{' '}
+                Open it{' '}
                 <span
                   aria-hidden="true"
                   className="inline-block transition-transform duration-200 group-hover:translate-x-0.5"
@@ -128,7 +126,7 @@ export function SystemCard({
               </dl>
             ) : (
               <div>
-                <span className="field">Workflow</span>
+                <span className="field">What it handles</span>
                 <ul className="mt-2.5 space-y-1.5">
                   {system.workflows.slice(0, 3).map((w) => (
                     <li key={w} className="text-[0.82rem] leading-snug text-ink-2">
@@ -142,37 +140,5 @@ export function SystemCard({
         </div>
       </div>
     </article>
-  )
-}
-
-/**
- * Provenance, stated on every card.
- *
- * Three of these rebuild systems running for a real client; two have never been
- * deployed for anyone. Saying which, every time, is the reason the rest of the
- * page is believable. A visitor who works out for themselves that a
- * demonstration was presented as delivered work will not call.
- */
-export function Provenance({ system, size = 'sm' }: { system: System; size?: 'sm' | 'md' }) {
-  const label = PROVENANCE_LABEL[system.provenance]
-  const cls = size === 'md' ? 'text-[0.7rem] px-2.5 py-1' : 'text-[0.6rem] px-2 py-0.5'
-
-  if (system.provenance === 'production') {
-    return (
-      <span
-        className={`inline-flex items-center gap-1.5 border border-gold font-mono tracking-[0.12em] text-gold-ink uppercase ${cls}`}
-      >
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
-        {label}
-      </span>
-    )
-  }
-
-  return (
-    <span
-      className={`inline-flex items-center border border-rule-strong font-mono tracking-[0.12em] text-ink-3 uppercase ${cls}`}
-    >
-      {label}
-    </span>
   )
 }

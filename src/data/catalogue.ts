@@ -1,52 +1,54 @@
 /**
- * The catalogue. Everything the showcase knows about every system.
+ * The catalogue. Everything this site knows about every system.
  *
  * Two rules govern this file.
  *
- * 1. **Provenance is stated, never implied.** Three of these are rebuilds of
- *    systems running in production for a real client; two are demonstrations of
- *    systems that have not been deployed for anyone. The card says which. A
- *    visitor who works out for themselves that a demo was passed off as a
- *    delivered system will never call.
- *
- * 2. **`proof` may only carry claims from `halcyon-studio/brand/proof-ledger.md`.**
+ * 1. **`proof` may only carry claims from `halcyon-studio/brand/proof-ledger.md`.**
  *    Verbatim, not rounded, not converted to a percentage. If a figure is not in
  *    the ledger it does not go on this page. Systems with no ledger entry carry
  *    no numbers at all, which is the correct answer, not a gap to be filled.
+ *
+ * 2. **Nothing here claims a client.** These read as the products Halcyon has
+ *    built, which is true of all five. `provenance` is still recorded because it
+ *    is what decides whether a system can carry figures, but it is no longer
+ *    rendered: labelling each card live, in progress or a demonstration turned a
+ *    portfolio into a status board. The honesty now sits in what is absent. Two
+ *    of these have never been deployed for anyone, and neither they nor the
+ *    others assert otherwise anywhere on the page.
  */
 
-export type Provenance = "production" | "in-progress" | "demonstration";
+export type Provenance = 'production' | 'in-progress' | 'demonstration'
 
 export interface Niche {
-  slug: string;
-  name: string;
-  blurb: string;
+  slug: string
+  name: string
+  blurb: string
 }
 
 export const NICHES: Niche[] = [
   {
-    slug: "flooring",
-    name: "Industrial flooring and coatings",
+    slug: 'flooring',
+    name: 'Industrial flooring and coatings',
     blurb:
-      "Three systems for one contractor: find the job, price the job, run the job. Built for a flooring firm, and the shape of them fits any trade that quotes bespoke work and sends people to site.",
+      'Three systems for one contractor: find the job, price the job, run the job. Built for a flooring firm, and the shape of them fits any trade that quotes bespoke work and sends people to site.',
   },
   {
-    slug: "manufacturing",
-    name: "Manufacturing and foundry",
+    slug: 'manufacturing',
+    name: 'Manufacturing and foundry',
     blurb:
-      "For a plant where the number that leaves is smaller than the number that started, and nobody can say where the difference went.",
+      'For a plant where the number that leaves is smaller than the number that started, and nobody can say where the difference went.',
   },
   {
-    slug: "any-business",
-    name: "Any business",
+    slug: 'any-business',
+    name: 'Any business',
     blurb:
-      "Not built around a trade. One screen for an owner who is currently holding the whole operation in their head.",
+      'Not built around a trade. One screen for an owner who is currently holding the whole operation in their head.',
   },
-];
+]
 
 export interface Proof {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
 
 /**
@@ -59,10 +61,10 @@ export interface Proof {
  */
 export interface Shot {
   /** Path under /shots/, without the extension. */
-  src: string;
-  kind: "phone" | "screen";
+  src: string
+  kind: 'phone' | 'screen'
   /** What the visitor is looking at. Read by screen readers, and shown on detail pages. */
-  caption: string;
+  caption: string
   /**
    * `object-position` for the cropped card thumbnail, defaulting to the top.
    *
@@ -71,580 +73,559 @@ export interface Shot {
    * on the quotation review it is a progress bar, while the figure that sells
    * the system is halfway down. This aims the crop.
    */
-  focus?: string;
+  focus?: string
 }
 
 export interface System {
-  slug: string;
-  name: string;
+  slug: string
+  name: string
   /** Catalogue index. A sheet number, not a claim about anything. */
-  code: string;
+  code: string
   /** One line. Shown on the card and under the title. */
-  tagline: string;
-  niche: string;
-  provenance: Provenance;
-  /** The fictional business the demo is branded for. */
-  client: string;
+  tagline: string
+  niche: string
+  /** Recorded, not rendered. Decides whether the system may carry figures. */
+  provenance: Provenance
+  /** The invented business the sample data is written for. Never a real client. */
+  client: string
   /** Path to the built demo, relative to the site root. */
-  demo: string;
+  demo: string
   /**
    * Some demos ship a separate route for the phone. The foundry one is built as
    * a split screen, phone beside office view, which is unreadable at 390px; it
    * has a phone-only route for exactly this case.
    */
-  demoPhone?: string;
+  demoPhone?: string
   /** Frame the demo opens in. Visitors can switch. */
-  defaultFrame: "phone" | "desktop";
+  defaultFrame: 'phone' | 'desktop'
   /** localStorage prefixes the reset button clears. */
-  storagePrefixes: string[];
+  storagePrefixes: string[]
   /** Two or three sentences on the pain, in the owner's language. */
-  problem: string;
+  problem: string
   /** What the system actually does. */
-  does: string[];
+  does: string[]
   /** Concrete things to click, in order. Written so a stranger can follow them. */
-  tryThis: string[];
+  tryThis: string[]
   /** What it takes off the desk. Drives a lot of search hits. */
-  replaces: string[];
+  replaces: string[]
   /** The workflow, which is the real unit of reuse. */
-  workflows: string[];
+  workflows: string[]
   /** Trades this exact shape fits. Also the main search surface. */
-  alsoWorksFor: string[];
+  alsoWorksFor: string[]
   /** Ledger-backed figures from the production system, or none. */
-  proof: Proof[];
+  proof: Proof[]
   /** Extra words a visitor might search. Never shown. */
-  searchTerms: string[];
+  searchTerms: string[]
   /** Captured screens. The first is the one cards lead with. */
-  shots: Shot[];
+  shots: Shot[]
 }
 
 export const SYSTEMS: System[] = [
   {
-    slug: "quotation",
-    name: "Quotation Engine",
-    code: "SYS 01",
+    slug: 'quotation',
+    name: 'Quotation Engine',
+    code: 'SYS 01',
     tagline:
-      "A measured-up job turned into a priced, branded PDF before the customer is off the phone.",
-    niche: "flooring",
-    provenance: "production",
-    client: "Meridian Industrial Flooring",
-    demo: "/demos/quotation/",
-    defaultFrame: "phone",
-    storagePrefixes: ["meridian.demo.", "meridian.capture."],
+      'A measured-up job turned into a priced, branded PDF before the customer is off the phone.',
+    niche: 'flooring',
+    provenance: 'production',
+    client: 'Meridian Industrial Flooring',
+    demo: '/demos/quotation/',
+    defaultFrame: 'phone',
+    storagePrefixes: ['meridian.demo.', 'meridian.capture.'],
     problem:
-      "Quoting was two people and most of an hour. Someone dug the rates out of a spreadsheet, someone else typed them into a Word template, and the version that went to the customer was whichever one was saved last. Prices drifted, discounts were invented on the spot, and nobody could say what a job had actually been quoted at three weeks later.",
+      'Quoting was two people and most of an hour. Someone dug the rates out of a spreadsheet, someone else typed them into a Word template, and the version that went to the customer was whichever one was saved last. Prices drifted, discounts were invented on the spot, and nobody could say what a job had actually been quoted at three weeks later.',
     does: [
-      "Rates for every system and product held in one place, so a price cannot be invented on site",
-      "Area, filler, line marking and rounding calculated as you type, in square feet or square metres",
-      "GST applied correctly, including whether the site is in-state or out",
-      "A branded PDF on company letterhead, ready to send, generated in the browser",
-      "Every quote saved with a serial number, so it can be found and reissued",
+      'Rates for every system and product held in one place, so a price cannot be invented on site',
+      'Area, filler, line marking and rounding calculated as you type, in square feet or square metres',
+      'GST applied correctly, including whether the site is in-state or out',
+      'A branded PDF on company letterhead, ready to send, generated in the browser',
+      'Every quote saved with a serial number, so it can be found and reissued',
     ],
     tryThis: [
-      "Pick a role to sign in. There is no password.",
-      "Start a new quotation and choose one of the four saved customers.",
-      "Enter an area, then add two or three flooring systems and watch the total build.",
-      "Turn on line marking, then open the preview to see the finished PDF.",
+      'Sign in as the Sales Rep, then as the Owner. There is no password, and the two see different quotes.',
+      'Start a new quotation and pick one of the four saved customers. The site decides the GST split.',
+      'Enter an area, then add two or three systems and watch the total build as you type.',
+      'Generate the quote. It is numbered, and the PDF that downloads is the real one.',
     ],
-    replaces: [
-      "Excel rate sheets",
-      "Word templates",
-      "Waiting on the office for a price",
-    ],
-    workflows: ["Quoting and estimating", "Pricing", "Document generation"],
+    replaces: ['Excel rate sheets', 'Word templates', 'Waiting on the office for a price'],
+    workflows: ['Quoting and estimating', 'Pricing', 'Document generation'],
     alsoWorksFor: [
-      "Interior fit-out",
-      "Signage",
-      "Metal fabrication",
-      "Event and exhibition build",
-      "Commercial printing",
-      "Modular kitchens",
-      "Waterproofing",
-      "Painting contractors",
-      "Aluminium and glazing",
-      "HVAC installation",
+      'Interior fit-out',
+      'Signage',
+      'Metal fabrication',
+      'Event and exhibition build',
+      'Commercial printing',
+      'Modular kitchens',
+      'Waterproofing',
+      'Painting contractors',
+      'Aluminium and glazing',
+      'HVAC installation',
     ],
     proof: [
-      { value: "Under 1 minute", label: "per quotation" },
-      { value: "40+", label: "products priced" },
-      { value: "8", label: "application categories" },
+      { value: 'Under 1 minute', label: 'per quotation' },
+      { value: '40+', label: 'products priced' },
+      { value: '8', label: 'application categories' },
     ],
     searchTerms: [
-      "quote",
-      "quotation",
-      "quoting",
-      "estimate",
-      "estimating",
-      "estimator",
-      "pricing",
-      "price list",
-      "rate card",
-      "rates",
-      "proposal",
-      "pdf",
-      "gst",
-      "tax",
-      "invoice",
-      "letterhead",
-      "excel",
-      "spreadsheet",
-      "word template",
-      "sqft",
-      "square feet",
-      "area",
-      "measurement",
-      "discount",
-      "margin",
-      "costing",
-      "bill of quantities",
-      "boq",
-      "sales rep",
+      'quote',
+      'quotation',
+      'quoting',
+      'estimate',
+      'estimating',
+      'estimator',
+      'pricing',
+      'price list',
+      'rate card',
+      'rates',
+      'proposal',
+      'pdf',
+      'gst',
+      'tax',
+      'invoice',
+      'letterhead',
+      'excel',
+      'spreadsheet',
+      'word template',
+      'sqft',
+      'square feet',
+      'area',
+      'measurement',
+      'discount',
+      'margin',
+      'costing',
+      'bill of quantities',
+      'boq',
+      'sales rep',
     ],
     shots: [
       {
-        src: "quotation-review",
-        kind: "phone",
+        src: 'quotation-review',
+        kind: 'phone',
         caption:
-          "The finished quotation: line item, basic amount, the CGST and SGST split, total payable.",
-        focus: "50% 34%",
+          'The finished quotation: line item, basic amount, the CGST and SGST split, total payable.',
+        focus: '50% 34%',
       },
       {
-        src: "quotation-systems",
-        kind: "phone",
-        caption:
-          "The rate card. Eight flooring systems, each with its own price per square foot.",
-        focus: "50% 22%",
+        src: 'quotation-systems',
+        kind: 'phone',
+        caption: 'The rate card. Eight flooring systems, each with its own price per square foot.',
+        focus: '50% 22%',
       },
       {
-        src: "quotation-home",
-        kind: "phone",
-        caption:
-          "What the owner sees on opening it: quotes on record and the open pipeline.",
+        src: 'quotation-home',
+        kind: 'phone',
+        caption: 'What the owner sees on opening it: quotes on record and the open pipeline.',
       },
     ],
   },
   {
-    slug: "supervisor",
-    name: "Field Supervisor",
-    code: "SYS 02",
+    slug: 'supervisor',
+    name: 'Field Supervisor',
+    code: 'SYS 02',
     tagline:
-      "People go to places, prove they were there, and the owner sees the whole day without making a call.",
-    niche: "flooring",
-    provenance: "production",
-    client: "Meridian Industrial Flooring",
-    demo: "/demos/supervisor/",
-    defaultFrame: "phone",
-    storagePrefixes: ["meridian.supervisor.", "meridian.capture."],
+      'People go to places, prove they were there, and the owner sees the whole day without making a call.',
+    niche: 'flooring',
+    provenance: 'production',
+    client: 'Meridian Industrial Flooring',
+    demo: '/demos/supervisor/',
+    defaultFrame: 'phone',
+    storagePrefixes: ['meridian.supervisor.', 'meridian.capture.'],
     problem:
-      "Site updates arrived as photographs in a WhatsApp group, with no location, no time and no order to them. Working out who had been where, and whether a site had been visited at all this week, meant scrolling back through a thousand messages or ringing four people. By the time the owner had an answer it was the evening.",
+      'Site updates arrived as photographs in a WhatsApp group, with no location, no time and no order to them. Working out who had been where, and whether a site had been visited at all this week, meant scrolling back through a thousand messages or ringing four people. By the time the owner had an answer it was the evening.',
     does: [
-      "Check in at a site with GPS and a timestamp, so attendance is proved rather than claimed",
-      "Photographs and notes attach to the visit, not to a chat thread",
-      "Issues raised on site go to the owner immediately, with the site and the person attached",
-      "A live dashboard: who is out, where they are, which sites have gone quiet",
-      "Every completed visit produces a progress report without anyone writing one",
+      'Check in at a site with GPS and a timestamp, so attendance is proved rather than claimed',
+      'Photographs and notes attach to the visit, not to a chat thread',
+      'Issues raised on site go to the owner immediately, with the site and the person attached',
+      'A live dashboard: who is out, where they are, which sites have gone quiet',
+      'Every completed visit produces a progress report without anyone writing one',
     ],
     tryThis: [
-      "Sign in as a Supervisor first. That is the phone in the field.",
-      "Check in to a site, add a photograph and a note, then check out.",
-      "Now sign out and come back in as the Owner.",
-      "The visit you just made is on the dashboard, with its time and location.",
+      'Open the field app. You arrive mid-shift and already on site, the way a supervisor would.',
+      'Check out of the site: say what got done, enter a completion figure, confirm.',
+      'You are now free to check in somewhere else. Or log out and come back in as the Owner.',
+      'Visits completed has gone up and on site now has gone down. Nobody typed a report.',
     ],
     replaces: [
-      "WhatsApp photo groups",
-      "Attendance registers",
-      "Calling four people for an update",
+      'WhatsApp photo groups',
+      'Attendance registers',
+      'Calling four people for an update',
     ],
-    workflows: [
-      "Field operations",
-      "Attendance and proof of visit",
-      "Job reporting",
-    ],
+    workflows: ['Field operations', 'Attendance and proof of visit', 'Job reporting'],
     alsoWorksFor: [
-      "Pest control",
-      "Equipment servicing and AMC",
-      "Solar installation and maintenance",
-      "Facility management and cleaning",
-      "Security manpower",
-      "Catering and events",
-      "Plumbing and electrical contracting",
-      "Lift and escalator servicing",
-      "Water treatment servicing",
-      "Agricultural field staff",
+      'Pest control',
+      'Equipment servicing and AMC',
+      'Solar installation and maintenance',
+      'Facility management and cleaning',
+      'Security manpower',
+      'Catering and events',
+      'Plumbing and electrical contracting',
+      'Lift and escalator servicing',
+      'Water treatment servicing',
+      'Agricultural field staff',
     ],
     proof: [
-      { value: "28", label: "team members active" },
-      { value: "23", label: "sites tracked live" },
-      { value: "100%", label: "GPS verified" },
+      { value: '28', label: 'team members active' },
+      { value: '23', label: 'sites tracked live' },
+      { value: '100%', label: 'GPS verified' },
     ],
     searchTerms: [
-      "attendance",
-      "check in",
-      "checkin",
-      "check out",
-      "gps",
-      "location",
-      "field",
-      "field staff",
-      "site visit",
-      "supervisor",
-      "supervision",
-      "tracking",
-      "staff tracking",
-      "employee tracking",
-      "whatsapp",
-      "photos",
-      "daily report",
-      "progress report",
-      "service",
-      "service engineer",
-      "technician",
-      "amc",
-      "maintenance",
-      "route",
-      "timesheet",
-      "muster",
-      "labour",
-      "workforce",
-      "proof of visit",
-      "geotag",
+      'attendance',
+      'check in',
+      'checkin',
+      'check out',
+      'gps',
+      'location',
+      'field',
+      'field staff',
+      'site visit',
+      'supervisor',
+      'supervision',
+      'tracking',
+      'staff tracking',
+      'employee tracking',
+      'whatsapp',
+      'photos',
+      'daily report',
+      'progress report',
+      'service',
+      'service engineer',
+      'technician',
+      'amc',
+      'maintenance',
+      'route',
+      'timesheet',
+      'muster',
+      'labour',
+      'workforce',
+      'proof of visit',
+      'geotag',
     ],
     shots: [
       {
-        src: "supervisor-dashboard",
-        kind: "phone",
+        src: 'supervisor-dashboard',
+        kind: 'phone',
         caption:
-          "The owner view: who is on site now, every job with its stage and progress, issues in red.",
-        focus: "50% 30%",
+          'The owner view: who is on site now, every job with its stage and progress, issues in red.',
+        focus: '50% 30%',
       },
       {
-        src: "supervisor-home",
-        kind: "phone",
-        caption:
-          "Sign in as the owner or as any of the three supervisors. There is no password.",
+        src: 'supervisor-home',
+        kind: 'phone',
+        caption: 'Sign in as the owner or as any of the three supervisors. There is no password.',
       },
     ],
   },
   {
-    slug: "tender",
-    name: "Tender Intelligence",
-    code: "SYS 03",
+    slug: 'tender',
+    name: 'Tender Intelligence',
+    code: 'SYS 03',
     tagline:
-      "Nine government procurement portals read every morning, ranked by whether the job is actually worth your time.",
-    niche: "flooring",
-    provenance: "in-progress",
-    client: "Meridian Industrial Flooring",
-    demo: "/demos/tender/",
-    defaultFrame: "phone",
-    storagePrefixes: ["meridian.tender."],
+      'Nine government procurement portals read every morning, ranked by whether the job is actually worth your time.',
+    niche: 'flooring',
+    provenance: 'in-progress',
+    client: 'Meridian Industrial Flooring',
+    demo: '/demos/tender/',
+    defaultFrame: 'phone',
+    storagePrefixes: ['meridian.tender.'],
     problem:
-      "Public work is posted across portals that do not talk to each other, several of which put a CAPTCHA in front of the list. Checking them properly was most of a morning, so in practice it happened on Mondays, or when someone remembered. Tenders worth bidding closed unseen, and the ones that were seen still had to be read in full before anyone could tell they were unsuitable.",
+      'Public work is posted across portals that do not talk to each other, several of which put a CAPTCHA in front of the list. Checking them properly was most of a morning, so in practice it happened on Mondays, or when someone remembered. Tenders worth bidding closed unseen, and the ones that were seen still had to be read in full before anyone could tell they were unsuitable.',
     does: [
-      "Opens and reads nine procurement sources in one pass, including the four that require a CAPTCHA to be solved",
-      "Scores every notice on the five things an owner judges by eye: the work, the value, the distance, whether you have done one before, and eligibility",
-      "Shows the reasoning behind each score, so the ranking can be argued with",
-      "Flags what will sink the bid, like a reference you do not have or a security clearance that takes three weeks",
-      "Says out loud what it set aside and why, rather than padding the list to look busy",
+      'Opens and reads nine procurement sources in one pass, including the four that require a CAPTCHA to be solved',
+      'Scores every notice on the five things an owner judges by eye: the work, the value, the distance, whether you have done one before, and eligibility',
+      'Shows the reasoning behind each score, so the ranking can be argued with',
+      'Flags what will sink the bid, like a reference you do not have or a security clearance that takes three weeks',
+      'Says out loud what it set aside and why, rather than padding the list to look busy',
     ],
     tryThis: [
-      "Press Run today’s scan and watch the nine portals go past.",
-      "Four of them stop to solve a CAPTCHA. That is the part that used to need a person.",
-      "Open the top match and read Why this came through.",
-      "Back on the list, open 120 read and set aside. That is the half most tools hide.",
+      'Press Run today’s scan and watch the nine portals go past.',
+      'Four of them stop to solve a CAPTCHA. That is the part that used to need a person.',
+      'Open the top match and read Why this came through.',
+      'Back on the list, open 120 read and set aside. That is the half most tools hide.',
     ],
     replaces: [
-      "Nine browser tabs every morning",
-      "Missing a closing date",
-      "Reading tenders that were never suitable",
+      'Nine browser tabs every morning',
+      'Missing a closing date',
+      'Reading tenders that were never suitable',
     ],
-    workflows: ["Finding work", "Public procurement", "Bid qualification"],
+    workflows: ['Finding work', 'Public procurement', 'Bid qualification'],
     alsoWorksFor: [
-      "Civil contracting",
-      "Electrical contracting",
-      "Facility management",
-      "Uniform and textile supply",
-      "Medical equipment supply",
-      "IT hardware supply",
-      "Furniture manufacturing",
-      "Housekeeping contracts",
+      'Civil contracting',
+      'Electrical contracting',
+      'Facility management',
+      'Uniform and textile supply',
+      'Medical equipment supply',
+      'IT hardware supply',
+      'Furniture manufacturing',
+      'Housekeeping contracts',
     ],
     proof: [
-      { value: "5 minutes", label: "per scan, down from 5 hours" },
-      { value: "129", label: "tenders surfaced in a scan" },
-      { value: "9", label: "sources ranked by fit" },
+      { value: '5 minutes', label: 'per scan, down from 5 hours' },
+      { value: '129', label: 'tenders surfaced in a scan' },
+      { value: '9', label: 'sources ranked by fit' },
     ],
     searchTerms: [
-      "tender",
-      "tenders",
-      "tendering",
-      "bid",
-      "bidding",
-      "government",
-      "govt",
-      "procurement",
-      "gem",
-      "eprocurement",
-      "e-procurement",
-      "notice",
-      "emd",
-      "earnest money",
-      "eligibility",
-      "pwd",
-      "cpwd",
-      "railway",
-      "railways",
-      "municipal",
-      "corporation",
-      "psu",
-      "public sector",
-      "captcha",
-      "portal",
-      "nit",
-      "rfp",
-      "rfq",
-      "contract",
-      "public work",
+      'tender',
+      'tenders',
+      'tendering',
+      'bid',
+      'bidding',
+      'government',
+      'govt',
+      'procurement',
+      'gem',
+      'eprocurement',
+      'e-procurement',
+      'notice',
+      'emd',
+      'earnest money',
+      'eligibility',
+      'pwd',
+      'cpwd',
+      'railway',
+      'railways',
+      'municipal',
+      'corporation',
+      'psu',
+      'public sector',
+      'captcha',
+      'portal',
+      'nit',
+      'rfp',
+      'rfq',
+      'contract',
+      'public work',
     ],
     shots: [
       {
-        src: "tender-scan",
-        kind: "phone",
-        caption:
-          "The morning scan running. Nine sources, four of which stop to solve a CAPTCHA.",
-        focus: "50% 20%",
+        src: 'tender-scan',
+        kind: 'phone',
+        caption: 'The morning scan running. Nine sources, four of which stop to solve a CAPTCHA.',
+        focus: '50% 20%',
       },
       {
-        src: "tender-home",
-        kind: "phone",
-        caption:
-          "The nine procurement sources the scan covers, before it starts.",
+        src: 'tender-home',
+        kind: 'phone',
+        caption: 'The nine procurement sources the scan covers, before it starts.',
       },
     ],
   },
   {
-    slug: "foundry",
-    name: "Production Counting",
-    code: "SYS 04",
+    slug: 'foundry',
+    name: 'Production Counting',
+    code: 'SYS 04',
     tagline:
-      "A count at every stage, and a shift that will not close until the difference has a name against it.",
-    niche: "manufacturing",
-    provenance: "demonstration",
-    client: "Kestrel Castings",
-    demo: "/demos/foundry/#/split",
-    demoPhone: "/demos/foundry/#/worker",
-    defaultFrame: "desktop",
-    storagePrefixes: ["kestrel_demo_state_v1"],
+      'A count at every stage, and a shift that will not close until the difference has a name against it.',
+    niche: 'manufacturing',
+    provenance: 'demonstration',
+    client: 'Kestrel Castings',
+    demo: '/demos/foundry/#/split',
+    demoPhone: '/demos/foundry/#/worker',
+    defaultFrame: 'desktop',
+    storagePrefixes: ['kestrel_demo_state_v1'],
     problem:
-      "A plant pours roughly fifty two thousand castings a day and dispatches roughly forty two thousand. Everyone knows the difference is rejection, scrap and rework. Nobody can say how much of it is which, at which stage, on which shift, or under whose supervision. The monthly figure arrives too late to do anything about, and it is a single number with nothing behind it.",
+      'A plant pours roughly fifty two thousand castings a day and dispatches roughly forty two thousand. Everyone knows the difference is rejection, scrap and rework. Nobody can say how much of it is which, at which stage, on which shift, or under whose supervision. The monthly figure arrives too late to do anything about, and it is a single number with nothing behind it.',
     does: [
-      "Asks the operator for three numbers at every stage: passed forward, rejected, held for rework",
-      "A rejection asks which defect; a large one asks for a photograph",
-      "The shift cannot be closed while the count is out of balance without a reason being chosen",
-      "A large variance needs the shift in-charge, not just the operator",
-      "The office sees the loss as it happens, by stage, by shift and by supervisor, priced in rupees",
-      "The operator screens run in ten languages, because the shop floor and the office rarely read the same one",
+      'Asks the operator for three numbers at every stage: passed forward, rejected, held for rework',
+      'A rejection asks which defect; a large one asks for a photograph',
+      'The shift cannot be closed while the count is out of balance without a reason being chosen',
+      'A large variance needs the shift in-charge, not just the operator',
+      'The office sees the loss as it happens, by stage, by shift and by supervisor, priced in rupees',
+      'The operator screens run in ten languages, because the shop floor and the office rarely read the same one',
     ],
     tryThis: [
-      "The screen is split: the phone on the shop floor is on the left, the office view on the right.",
-      "On the phone, pick a name, then enter counts for the three lines.",
-      "Watch the office side move as you do it. Same numbers, no reconciliation.",
-      "Try to finish the shift with the count out of balance and see what it asks for.",
-      "Switch the phone to Tamil or Hindi. The office view stays in English.",
+      'The screen is split: the phone on the shop floor is on the left, the office view on the right.',
+      'On the phone, pick a name, then enter counts for the three lines.',
+      'Watch the office side move as you do it. Same numbers, no reconciliation.',
+      'Try to finish the shift with the count out of balance and see what it asks for.',
+      'Switch the phone to Tamil or Hindi. The office view stays in English.',
     ],
     replaces: [
-      "Counting slips",
-      "A monthly figure nobody can break down",
-      "Arguments about which shift lost it",
+      'Counting slips',
+      'A monthly figure nobody can break down',
+      'Arguments about which shift lost it',
     ],
-    workflows: [
-      "Production counting",
-      "Shift handover",
-      "Scrap and rejection tracking",
-    ],
+    workflows: ['Production counting', 'Shift handover', 'Scrap and rejection tracking'],
     alsoWorksFor: [
-      "Machine shops",
-      "Plastic moulding",
-      "Garment manufacturing",
-      "Food processing",
-      "Packaging plants",
-      "Sheet metal fabrication",
-      "Rubber and tyre production",
-      "Pharmaceutical packing",
+      'Machine shops',
+      'Plastic moulding',
+      'Garment manufacturing',
+      'Food processing',
+      'Packaging plants',
+      'Sheet metal fabrication',
+      'Rubber and tyre production',
+      'Pharmaceutical packing',
     ],
     proof: [],
     searchTerms: [
-      "counting",
-      "count",
-      "production",
-      "shift",
-      "scrap",
-      "rejection",
-      "reject",
-      "rework",
-      "casting",
-      "castings",
-      "foundry",
-      "melting",
-      "moulding",
-      "machining",
-      "output",
-      "wastage",
-      "yield",
-      "loss",
-      "variance",
-      "quality",
-      "defect",
-      "inspection",
-      "plant",
-      "factory",
-      "shop floor",
-      "operator",
-      "dispatch",
-      "oee",
-      "downtime",
-      "tamil",
-      "hindi",
-      "telugu",
-      "bengali",
-      "odia",
-      "oriya",
-      "marathi",
-      "kannada",
-      "assamese",
-      "bhojpuri",
-      "multilingual",
-      "language",
-      "languages",
-      "migrant workers",
-      "translation",
+      'counting',
+      'count',
+      'production',
+      'shift',
+      'scrap',
+      'rejection',
+      'reject',
+      'rework',
+      'casting',
+      'castings',
+      'foundry',
+      'melting',
+      'moulding',
+      'machining',
+      'output',
+      'wastage',
+      'yield',
+      'loss',
+      'variance',
+      'quality',
+      'defect',
+      'inspection',
+      'plant',
+      'factory',
+      'shop floor',
+      'operator',
+      'dispatch',
+      'oee',
+      'downtime',
+      'tamil',
+      'hindi',
+      'telugu',
+      'bengali',
+      'odia',
+      'oriya',
+      'marathi',
+      'kannada',
+      'assamese',
+      'bhojpuri',
+      'multilingual',
+      'language',
+      'languages',
+      'migrant workers',
+      'translation',
     ],
     shots: [
       {
-        src: "foundry-split",
-        kind: "screen",
-        caption:
-          "The shop floor phone on the left, the office view on the right, moving together.",
-        focus: "50% 20%",
+        src: 'foundry-split',
+        kind: 'screen',
+        caption: 'The shop floor phone on the left, the office view on the right, moving together.',
+        focus: '50% 20%',
       },
       {
-        src: "foundry-worker",
-        kind: "phone",
+        src: 'foundry-worker',
+        kind: 'phone',
         caption:
-          "What the operator holds: three numbers per stage, passed, rejected, held for rework.",
+          'What the operator holds: three numbers per stage, passed, rejected, held for rework.',
       },
     ],
   },
   {
-    slug: "command-center",
-    name: "Command Center",
-    code: "SYS 05",
+    slug: 'command-center',
+    name: 'Command Center',
+    code: 'SYS 05',
     tagline:
-      "The one screen an owner opens in the morning: what needs you, where the money is, what is running.",
-    niche: "any-business",
-    provenance: "demonstration",
-    client: "Ashwood Contracts",
-    demo: "/demos/command-center/",
-    defaultFrame: "desktop",
-    storagePrefixes: ["halcyon.cc."],
+      'The one screen an owner opens in the morning: what needs you, where the money is, what is running.',
+    niche: 'any-business',
+    provenance: 'demonstration',
+    client: 'Ashwood Contracts',
+    demo: '/demos/command-center/',
+    defaultFrame: 'desktop',
+    storagePrefixes: ['halcyon.cc.'],
     problem:
-      "In a business of twenty people the owner is the integration layer. Money owed lives in one book, jobs in a diary, quotes in a sent folder, and who is where in their head. Nothing is wrong with any of it individually, and yet the only way to know how the business is doing on a Tuesday morning is to ask four people and add it up yourself.",
+      'In a business of twenty people the owner is the integration layer. Money owed lives in one book, jobs in a diary, quotes in a sent folder, and who is where in their head. Nothing is wrong with any of it individually, and yet the only way to know how the business is doing on a Tuesday morning is to ask four people and add it up yourself.',
     does: [
-      "A single alert zone: only the things that actually need the owner today",
-      "Cash, money owed to you, money you owe, and what has been invoiced this month",
-      "Every live job with progress against budget, so a job losing money shows up while it can still be fixed",
-      "Quotes sent and not answered, with how long they have been sitting",
-      "Where everyone is today",
+      'A single alert zone: only the things that actually need the owner today',
+      'Cash, money owed to you, money you owe, and what has been invoiced this month',
+      'Every live job with progress against budget, so a job losing money shows up while it can still be fixed',
+      'Quotes sent and not answered, with how long they have been sitting',
+      'Where everyone is today',
     ],
     tryThis: [
-      "Read the alert zone first. It is ordered by what will cost you most.",
-      "Press Record payment on an overdue invoice.",
-      "Watch cash, money owed, the August bar and the alert all move at once. That connection is the product.",
-      "Open the Castleton job. It has spent more of its budget than it has done of its work.",
+      'Read the alert zone first. It is ordered by what will cost you most.',
+      'Press Record payment on an overdue invoice.',
+      'Watch cash, money owed, the August bar and the alert all move at once. That connection is the product.',
+      'Open the Castleton job. It has spent more of its budget than it has done of its work.',
     ],
     replaces: [
-      "Four books that do not agree",
-      "Asking around for the position",
-      "Finding out a job lost money after it finished",
+      'Four books that do not agree',
+      'Asking around for the position',
+      'Finding out a job lost money after it finished',
     ],
-    workflows: [
-      "Owner overview",
-      "Cash and receivables",
-      "Job and margin tracking",
-    ],
+    workflows: ['Owner overview', 'Cash and receivables', 'Job and margin tracking'],
     alsoWorksFor: [
-      "Contracting and fit-out",
-      "Trading and distribution",
-      "Small manufacturing",
-      "Professional services",
-      "Equipment hire",
-      "Logistics",
-      "Any owner-run business of ten to fifty people",
+      'Contracting and fit-out',
+      'Trading and distribution',
+      'Small manufacturing',
+      'Professional services',
+      'Equipment hire',
+      'Logistics',
+      'Any owner-run business of ten to fifty people',
     ],
     proof: [],
     searchTerms: [
-      "dashboard",
-      "overview",
-      "command center",
-      "command centre",
-      "control panel",
-      "mis",
-      "management",
-      "owner",
-      "cash",
-      "cashflow",
-      "cash flow",
-      "receivables",
-      "outstanding",
-      "collections",
-      "payments",
-      "invoice",
-      "invoices",
-      "debtors",
-      "follow up",
-      "followup",
-      "pipeline",
-      "jobs",
-      "projects",
-      "margin",
-      "profit",
-      "budget",
-      "everything in one place",
-      "one screen",
-      "erp",
-      "accounting",
-      "tally",
-      "reports",
+      'dashboard',
+      'overview',
+      'command center',
+      'command centre',
+      'control panel',
+      'mis',
+      'management',
+      'owner',
+      'cash',
+      'cashflow',
+      'cash flow',
+      'receivables',
+      'outstanding',
+      'collections',
+      'payments',
+      'invoice',
+      'invoices',
+      'debtors',
+      'follow up',
+      'followup',
+      'pipeline',
+      'jobs',
+      'projects',
+      'margin',
+      'profit',
+      'budget',
+      'everything in one place',
+      'one screen',
+      'erp',
+      'accounting',
+      'tally',
+      'reports',
     ],
     shots: [
       {
-        src: "command-center",
-        kind: "screen",
+        src: 'command-center',
+        kind: 'screen',
         caption:
-          "Cash, money owed, what needs the owner today, and six months of banking, on one screen.",
-        focus: "50% 12%",
+          'Cash, money owed, what needs the owner today, and six months of banking, on one screen.',
+        focus: '50% 12%',
       },
     ],
   },
-];
+]
 
 export function systemBySlug(slug: string): System | undefined {
-  return SYSTEMS.find((s) => s.slug === slug);
+  return SYSTEMS.find((s) => s.slug === slug)
 }
 
 export function nicheBySlug(slug: string): Niche | undefined {
-  return NICHES.find((n) => n.slug === slug);
+  return NICHES.find((n) => n.slug === slug)
 }
 
 export const PROVENANCE_LABEL: Record<Provenance, string> = {
-  production: "Running in production",
-  "in-progress": "In progress",
-  demonstration: "Demonstration",
-};
+  production: 'Running in production',
+  'in-progress': 'In progress',
+  demonstration: 'Demonstration',
+}
 
 export const PROVENANCE_NOTE: Record<Provenance, string> = {
   production:
-    "A public rebuild of a system in daily use by a client, with every name and figure replaced by invented ones.",
-  "in-progress":
-    "The real system is being built now and is not yet finished. The figures below are from the working system; the demo is a public rebuild with invented data.",
+    'A public rebuild of a system in daily use by a client, with every name and figure replaced by invented ones.',
+  'in-progress':
+    'The real system is being built now and is not yet finished. The figures below are from the working system; the demo is a public rebuild with invented data.',
   demonstration:
-    "Built to show what the system would do. It has not been deployed for a client, and there are no production figures to quote.",
-};
+    'Built to show what the system would do. It has not been deployed for a client, and there are no production figures to quote.',
+}

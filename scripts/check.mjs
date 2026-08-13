@@ -101,14 +101,7 @@ console.log('\nPages')
     }
   })
 
-  for (const path of [
-    '/',
-    '/works',
-    '/approach',
-    '/engagements',
-    '/contact',
-    ...SYSTEMS.map((s) => `/works/${s}`),
-  ]) {
+  for (const path of ['/', '/contact', ...SYSTEMS.map((s) => `/${s}`)]) {
     missing.length = 0
     const res = await page.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 })
     if (!res || res.status() >= 400) {
@@ -127,10 +120,17 @@ console.log('\nPages')
   notFound > 0 ? pass('/nonsense-route shows the 404 page') : fail('404 page did not render')
 
   // Old links that exist in the world must still land.
-  await page.goto(BASE + '/system/quotation', { waitUntil: 'networkidle' })
-  page.url().endsWith('/works/quotation')
-    ? pass('/system/quotation redirects to /works/quotation')
-    : fail(`/system/quotation went to ${page.url()}`)
+  for (const [from, to] of [
+    ['/system/quotation', '/quotation'],
+    ['/works/quotation', '/quotation'],
+    ['/works', '/'],
+    ['/engagements', '/contact'],
+  ]) {
+    await page.goto(BASE + from, { waitUntil: 'networkidle' })
+    new URL(page.url()).pathname === to
+      ? pass(`${from} redirects to ${to}`)
+      : fail(`${from} went to ${new URL(page.url()).pathname}, expected ${to}`)
+  }
 
   await ctx.close()
 }
@@ -142,7 +142,7 @@ console.log('\nScreenshots')
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
-  await page.goto(BASE + '/works', { waitUntil: 'networkidle' })
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' })
   const broken = await page.evaluate(() =>
     Array.from(document.querySelectorAll('img'))
       .filter((img) => img.complete && img.naturalWidth === 0)
@@ -150,8 +150,8 @@ console.log('\nScreenshots')
   )
   const count = await page.locator('img').count()
   if (broken.length) fail(`broken images: ${broken.join(', ')}`)
-  else if (count < 5) fail(`only ${count} images on /works, expected at least 5`)
-  else pass(`${count} images on /works, all decoded`)
+  else if (count < 5) fail(`only ${count} images on the index, expected at least 5`)
+  else pass(`${count} images on the index, all decoded`)
   await ctx.close()
 }
 
@@ -162,28 +162,28 @@ console.log('\nSearch')
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await ctx.newPage()
-  await page.goto(BASE + '/works', { waitUntil: 'networkidle' })
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' })
   const field = page.locator('#system-search')
 
   for (const [query, slug] of Object.entries(SEARCHES)) {
     await field.fill(query)
     await page.waitForTimeout(220)
     const first = await page
-      .locator('article a[href^="/works/"]')
+      .locator('article a[href^="/"]')
       .first()
       .getAttribute('href')
       .catch(() => null)
-    if (first === `/works/${slug}`) pass(`"${query}" → ${slug}`)
-    else fail(`"${query}" → ${first ?? 'nothing'}, expected /works/${slug}`)
+    if (first === `/${slug}`) pass(`"${query}" → ${slug}`)
+    else fail(`"${query}" → ${first ?? 'nothing'}, expected /${slug}`)
   }
 
   for (const [query, slugs] of Object.entries(SEARCHES_CONTAIN)) {
     await field.fill(query)
     await page.waitForTimeout(220)
-    const hrefs = await page.locator('article a[href^="/works/"]').evaluateAll((els) =>
+    const hrefs = await page.locator('article a[href^="/"]').evaluateAll((els) =>
       els.map((e) => e.getAttribute('href')),
     )
-    const missing = slugs.filter((s) => !hrefs.includes(`/works/${s}`))
+    const missing = slugs.filter((s) => !hrefs.includes(`/${s}`))
     missing.length === 0
       ? pass(`"${query}" returns ${slugs.join(' and ')}`)
       : fail(`"${query}" dropped ${missing.join(', ')}; got ${hrefs.join(', ') || 'nothing'}`)
@@ -211,7 +211,7 @@ console.log('\nDemos')
   const page = await ctx.newPage()
 
   for (const slug of SYSTEMS) {
-    await page.goto(`${BASE}/works/${slug}`, { waitUntil: 'networkidle', timeout: 45000 })
+    await page.goto(`${BASE}/${slug}`, { waitUntil: 'networkidle', timeout: 45000 })
     await page.waitForTimeout(2500)
     const frame = page.frames().find((f) => f.url().includes('/demos/'))
     if (!frame) {
@@ -274,7 +274,7 @@ console.log('\nMobile')
     hasTouch: true,
   })
   const page = await ctx.newPage()
-  for (const path of ['/', '/works', '/works/quotation', '/approach', '/engagements', '/contact']) {
+  for (const path of ['/', '/quotation', '/supervisor', '/command-center', '/contact']) {
     await page.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 })
     await page.waitForTimeout(600)
     const overflow = await page.evaluate(
@@ -290,7 +290,7 @@ console.log('\nMobile')
   // Scoped to the header: the footer carries the same link on every page.
   const menuOpen = await page
     .getByRole('banner')
-    .getByRole('link', { name: 'The Works' })
+    .getByRole('link', { name: 'The work', exact: true })
     .isVisible()
   menuOpen ? pass('the mobile menu opens') : fail('the mobile menu did not open')
 
@@ -306,7 +306,7 @@ console.log('\nMobile')
     ['foundry', 'Open Production Counting'],
   ]
   for (const [slug, button] of LAUNCH) {
-    await page.goto(`${BASE}/works/${slug}`, { waitUntil: 'networkidle' })
+    await page.goto(`${BASE}/${slug}`, { waitUntil: 'networkidle' })
     await page.waitForTimeout(700)
     await page.getByRole('button', { name: button }).click()
     await page.waitForTimeout(3000)
@@ -331,7 +331,7 @@ console.log('\nMobile')
 
   // The foundry demo must get its phone route, not the split screen, which is
   // unreadable at 390px.
-  await page.goto(`${BASE}/works/foundry`, { waitUntil: 'networkidle' })
+  await page.goto(`${BASE}/foundry`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(700)
   await page.getByRole('button', { name: 'Open Production Counting' }).click()
   await page.waitForTimeout(2500)
@@ -340,6 +340,40 @@ console.log('\nMobile')
     ? pass('foundry opens its phone route on a phone')
     : fail(`foundry opened ${foundryUrl || 'nothing'}, expected #/worker`)
 
+  await ctx.close()
+}
+
+/* ------------------------------------------------------------------ *
+ * The status vocabulary is gone for good.
+ *
+ * These read as the products Halcyon has built. Labelling one live, in
+ * production or a demonstration turned a portfolio into a status board, and
+ * the words creep back in the moment somebody edits copy without knowing why
+ * they went.
+ * ------------------------------------------------------------------ */
+console.log('\nCopy')
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await ctx.newPage()
+  const banned = ['Running in production', 'In progress', 'Demonstration', 'Branded for']
+  for (const path of ['/', '/quotation', '/foundry', '/contact']) {
+    await page.goto(BASE + path, { waitUntil: 'networkidle' })
+    const text = await page.evaluate(() => document.body.innerText)
+    const found = banned.filter((b) => text.includes(b))
+    found.length === 0
+      ? pass(`${path} carries no status labels`)
+      : fail(`${path} still says: ${found.join(', ')}`)
+  }
+
+  // And no prices, anywhere.
+  for (const path of ['/', '/quotation', '/contact']) {
+    await page.goto(BASE + path, { waitUntil: 'networkidle' })
+    const text = await page.evaluate(() => document.body.innerText)
+    // A rupee figure with thousands separators is a price. The demos have
+    // plenty inside their own iframes; this only reads the shell.
+    const price = text.match(/₹\s?[\d,]{5,}/)
+    price ? fail(`${path} publishes a price: ${price[0]}`) : pass(`${path} publishes no price`)
+  }
   await ctx.close()
 }
 

@@ -22,7 +22,7 @@ export function SearchField({
           value={value}
           autoFocus={autoFocus}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Pest control, quotations, counting production…"
+          placeholder="Pest control, quotations…"
           autoComplete="off"
           className="searchfield display-sm w-full pr-10 text-[1.35rem] text-ink placeholder:font-400 placeholder:text-ink-3/70 sm:text-[1.7rem]"
         />
@@ -83,8 +83,8 @@ export function NoResults({ query }: { query: string }) {
         </h2>
         <p className="prose-measure mt-6 text-[1rem] leading-relaxed text-ink-2">
           Five systems is not a product range, it is what has been built so far. The useful question
-          is not whether we have already made something for your trade. It is whether the job you are
-          doing twice looks like one of these underneath, and that is usually decided in about
+          is not whether we have already made something for your trade. It is whether the job you
+          are doing twice looks like one of these underneath, and that is usually decided in about
           twenty minutes on a call.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">

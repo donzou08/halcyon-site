@@ -1,8 +1,12 @@
 # halcyon-site, project context
 
-The unified Halcyon website: marketing pages, the portfolio portal, and all five
-demos, on one origin and one deploy. Created 2026-08-13 by merging
-`halcyon-website` (the marketing site) and `halcyon-works` (the portal).
+**The Halcyon portfolio.** The five systems Halcyon has built, each one running
+rather than pictured, plus a contact route. Created 2026-08-13.
+
+**It is not the company website.** `halcyon.uno` is, it stays as it is, and this
+is designed to be mounted at `halcyon.uno/works`. An earlier version of this repo
+was a full marketing site with its own home, approach and pricing pages; Sanjith
+cut all of that on 2026-08-13 so the two do not compete.
 
 Read [README.md](README.md) for architecture, [PRODUCT.md](PRODUCT.md) for what
 Halcyon is and the content gates, [DESIGN.md](DESIGN.md) for the visual system.
@@ -12,31 +16,48 @@ This file holds the decisions and the traps.
 
 | Old | Status |
 | --- | --- |
-| `/root/projects/halcyon-website` | The live halcyon.uno until the domain is moved here. **Do not edit it.** Kept as the rollback. |
-| `/root/projects/halcyon-works` | Superseded by `/works` here. Its Vercel deploy still exists and will drift. |
-
-Both old repos are untouched, so there is no window where anything is broken.
-Once halcyon.uno points here, retire them rather than leaving three sites live.
+| `/root/projects/halcyon-website` | **The live halcyon.uno, and it stays that way.** Edit only what Sanjith asks for; its dark identity is deliberate and is not to be brought in line with this site. |
+| `/root/projects/halcyon-works` | Superseded by this repo. Its Vercel deploy still exists and will drift. Retire it. |
 
 ## Decisions worth not relitigating
 
-- **One repo, one deploy.** `/works` is a route, not a subdomain. The demos need
-  to be same-origin (see README), and the previous split meant the marketing site
-  never linked to the work and the two designs drifted apart.
+- **Portfolio only.** No home page above the work, no approach page, no pricing
+  page. Sanjith's call on 2026-08-13: halcyon.uno carries the company story and
+  this carries the work. Routes are flat (`/quotation`, not `/works/quotation`)
+  precisely so the whole site can be mounted under `halcyon.uno/works` without
+  every path reading `/works/works/`.
+
+- **No status labels anywhere.** Nothing says live, in production, in progress or
+  demonstration. Sanjith's instruction: "just say the products we have done."
+  `provenance` still exists in the catalogue because it decides which systems may
+  carry figures, but it is never rendered. The honesty now sits in what is
+  absent: two of the five have never been deployed for anyone, and nothing on the
+  page asserts otherwise for any of them. `scripts/check.mjs` fails if any of
+  those words reappear on a page.
+
+- **No prices, anywhere, on either site.** The tiers came off this repo and off
+  halcyon.uno on 2026-08-13. Publishing them taught a reader to pick a package
+  and ask what it includes, which is the opposite of the useful conversation, and
+  it framed the work before anyone had seen the work. The line is that every
+  system is quoted on the complexity of the job, after the workflow is mapped.
+  `check.mjs` fails on a rupee figure appearing in the shell.
 - **Light, not dark.** Chosen by Sanjith on 2026-08-13 after the old site was
   read as "a posh night event instead of a website for a tech company". The
   reasoning is in DESIGN.md. The mark, wordmark and gold are unchanged.
 - **No serif.** Cormorant Garamond is gone from the site entirely. This was the
   largest single cause of the old read and reintroducing it undoes the work.
-- **Nothing on the site mentions WhatsApp.** Sanjith's instruction, 2026-08-13:
-  the advertisement decides whether a visitor goes to WhatsApp or to the site,
-  and the site itself stays a website. Do not add a WhatsApp button, a `wa.me`
-  link, or a floating chat affordance.
-- **The two halves name different clients on purpose.** The marketing pages name
-  **Swathi Engineering Agencies**, because that is the claim being made there.
-  The demos wear **Meridian Industrial Flooring**, invented, because a public
-  rebuild must not carry a real customer's data. Both are honest; do not
-  "fix" one to match the other.
+- **WhatsApp belongs on this site and not on halcyon.uno.** Sanjith reversed the
+  earlier no-WhatsApp rule for the portfolio on 2026-08-13: this is the funnel,
+  so it offers WhatsApp, phone, email and the form side by side, and the WhatsApp
+  message is pre-filled with the system the visitor was looking at. halcyon.uno
+  still names no chat app. Everything is behind `HAS_WHATSAPP` / `HAS_PHONE` and
+  disappears cleanly while the number is empty.
+- **This site names no client; halcyon.uno names one.** The demos wear invented
+  companies (Meridian, Kestrel, Ashwood) because a public rebuild must not carry
+  a real customer's data. halcyon.uno separately names **Swathi Engineering
+  Agencies**, because that is the claim being made over there. Both are honest;
+  do not "fix" one to match the other, and do not bring the real client's name
+  onto this site.
 - **`demos/foundry` was rebranded and must stay that way.** It came from
   `/root/projects/SAC Demo`, branded for **SAC Engine Components, Gummidipoondi**,
   a real company. Publishing that name would read as "SAC is a Halcyon client".
@@ -76,15 +97,29 @@ Once halcyon.uno points here, retire them rather than leaving three sites live.
 
 ## Still to do
 
-- **`CONTACT.phone` in `src/data/site.ts` is empty.** Sanjith's number was never
-  in any repo, so it was left blank rather than guessed: a wrong number on a live
-  site sends enquiries to a stranger. Every surface that would show it is behind
-  `HAS_PHONE` and simply omits the row, so the site is correct as it stands.
-  Filling the constant makes it appear in the footer and on `/contact`.
+- **`CONTACT.phone` in `src/data/site.ts` is empty, and so is the WhatsApp
+  route.** Sanjith's number was never in any repo, so it was left blank rather
+  than guessed: a wrong number on a live site sends enquiries to a stranger.
+  Every surface that would show it is behind `HAS_PHONE` / `HAS_WHATSAPP` and
+  omits the row, so the site is correct as it stands. Filling `phone` lights up
+  the footer, `/contact`, and the WhatsApp button on every system page. Set
+  `whatsapp` as well only if it differs from the phone number.
 - **`window.HALCYON_ANALYTICS` in `index.html` has empty IDs.** Nothing loads
   while they are empty. The Meta pixel matters before any advertising spend,
   because without it there is no retargeting audience.
 - Em dashes survive in demo source **comments**. Visible demo copy is clean.
+
+## Verified demo flows
+
+Both production rebuilds were walked end to end on 2026-08-13 and work:
+
+- **Quotation.** Sign in, pick a customer, area, system, extras, review with the
+  correct CGST/SGST split, generate. It produces a numbered quote and a real
+  10.8 kB PDF. Sales Rep and Owner see different quote histories.
+- **Supervisor.** The visitor lands **mid-shift and already checked in**, which
+  is why `tryThis` starts at check-out rather than check-in. Check out, and the
+  owner dashboard's visit count and on-site count both move. That cross-role
+  update is the moment worth showing; do not reorder the instructions past it.
 
 ## Adding a system
 
@@ -92,7 +127,8 @@ Once halcyon.uno points here, retire them rather than leaving three sites live.
    config, and `HashRouter` if it routes.
 2. Add the slug to `DEMOS` in `scripts/build-demos.mjs`.
 3. Add an entry to `SYSTEMS` in `src/data/catalogue.ts`, including
-   `storagePrefixes` so Reset can clear it, and a `code`.
+   `storagePrefixes` so Reset can clear it, and a `code`. Check `tryThis`
+   against the demo's **actual arrival state**, which is not always its start.
 4. Add its shots to `SHOTS` in `scripts/capture-shots.mjs`, then run it.
 5. `npm run build:all`, then `node scripts/check.mjs`.
 

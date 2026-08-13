@@ -4,18 +4,15 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from '
 import './index.css'
 import { ScrollToTop } from './components/chrome'
 import Home from './pages/Home'
-import Works from './pages/Works'
 import System from './pages/System'
-import Approach from './pages/Approach'
-import Engagements from './pages/Engagements'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 
 /**
  * The browser loads this application once, so every route change after that is
  * invisible to an advertising pixel unless it is reported by hand. Without this,
- * a campaign sees one page view of the home page per visitor and cannot tell a
- * visit that opened three systems from one that bounced.
+ * a campaign sees one page view of the index per visitor and cannot tell a visit
+ * that opened three systems from one that bounced.
  *
  * The initial load is already counted by the snippet in index.html, so this
  * skips the first render rather than double counting it.
@@ -39,14 +36,17 @@ declare global {
 }
 
 /**
- * The Works used to be a separate deployment where a system lived at
- * `/system/:slug`. Those links are in Instagram captions and LinkedIn posts that
- * cannot be edited, so the old shape is kept as a redirect rather than left to
- * land on a 404.
+ * Links that already exist in the world.
+ *
+ * The systems used to live at `/works/:slug`, and before that at `/system/:slug`.
+ * Both shapes are in Instagram captions and LinkedIn posts that cannot be
+ * edited, so they redirect rather than 404. The flat `/:slug` is the shape now,
+ * because this site is intended to be mounted at halcyon.uno/works, and
+ * `/works/works/quotation` would be the alternative.
  */
-function LegacySystemRedirect() {
+function LegacyRedirect() {
   const { slug } = useParams()
-  return <Navigate to={`/works/${slug ?? ''}`} replace />
+  return <Navigate to={`/${slug ?? ''}`} replace />
 }
 
 createRoot(document.getElementById('root')!).render(
@@ -56,17 +56,20 @@ createRoot(document.getElementById('root')!).render(
       <TrackRoutes />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/works" element={<Works />} />
-        <Route path="/works/:slug" element={<System />} />
-        <Route path="/approach" element={<Approach />} />
-        <Route path="/engagements" element={<Engagements />} />
         <Route path="/contact" element={<Contact />} />
 
-        {/* Links that exist in the world already. */}
-        <Route path="/system/:slug" element={<LegacySystemRedirect />} />
-        <Route path="/systems" element={<Navigate to="/works" replace />} />
-        <Route path="/work" element={<Navigate to="/works" replace />} />
-        <Route path="/pricing" element={<Navigate to="/engagements" replace />} />
+        <Route path="/works" element={<Navigate to="/" replace />} />
+        <Route path="/works/:slug" element={<LegacyRedirect />} />
+        <Route path="/system/:slug" element={<LegacyRedirect />} />
+        <Route path="/systems" element={<Navigate to="/" replace />} />
+        {/* The marketing pages this site used to carry now live only on
+            halcyon.uno, and pricing is no longer published anywhere. */}
+        <Route path="/approach" element={<Navigate to="/" replace />} />
+        <Route path="/engagements" element={<Navigate to="/contact" replace />} />
+        <Route path="/pricing" element={<Navigate to="/contact" replace />} />
+
+        {/* Static routes above win over this, so /contact is never a slug. */}
+        <Route path="/:slug" element={<System />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

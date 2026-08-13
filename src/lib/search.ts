@@ -43,7 +43,11 @@ function fieldsOf(s: System): Field[] {
 }
 
 function normalise(v: string): string {
-  return v.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim()
+  return v
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 /**
@@ -52,12 +56,84 @@ function normalise(v: string): string {
  * system's `problem` paragraph and the result is all five, ranked by accident.
  */
 const STOPWORDS = new Set([
-  'a', 'about', 'all', 'am', 'an', 'and', 'any', 'are', 'as', 'at', 'be', 'been', 'but', 'by',
-  'can', 'do', 'does', 'each', 'every', 'for', 'from', 'get', 'go', 'goes', 'had', 'has', 'have',
-  'how', 'i', 'if', 'in', 'into', 'is', 'it', 'its', 'keep', 'lot', 'make', 'me', 'my', 'need',
-  'no', 'not', 'of', 'on', 'one', 'or', 'our', 'out', 'so', 'some', 'that', 'the', 'their',
-  'them', 'then', 'there', 'they', 'thing', 'things', 'this', 'to', 'too', 'up', 'us', 'use',
-  'want', 'was', 'we', 'what', 'when', 'where', 'which', 'who', 'will', 'with', 'would', 'you',
+  'a',
+  'about',
+  'all',
+  'am',
+  'an',
+  'and',
+  'any',
+  'are',
+  'as',
+  'at',
+  'be',
+  'been',
+  'but',
+  'by',
+  'can',
+  'do',
+  'does',
+  'each',
+  'every',
+  'for',
+  'from',
+  'get',
+  'go',
+  'goes',
+  'had',
+  'has',
+  'have',
+  'how',
+  'i',
+  'if',
+  'in',
+  'into',
+  'is',
+  'it',
+  'its',
+  'keep',
+  'lot',
+  'make',
+  'me',
+  'my',
+  'need',
+  'no',
+  'not',
+  'of',
+  'on',
+  'one',
+  'or',
+  'our',
+  'out',
+  'so',
+  'some',
+  'that',
+  'the',
+  'their',
+  'them',
+  'then',
+  'there',
+  'they',
+  'thing',
+  'things',
+  'this',
+  'to',
+  'too',
+  'up',
+  'us',
+  'use',
+  'want',
+  'was',
+  'we',
+  'what',
+  'when',
+  'where',
+  'which',
+  'who',
+  'will',
+  'with',
+  'would',
+  'you',
   'your',
 ])
 
@@ -77,7 +153,8 @@ function singular(w: string): string {
   if (w.length > 4 && w.endsWith('ies')) return `${w.slice(0, -3)}y`
   if (w.length > 4 && (w.endsWith('ches') || w.endsWith('shes') || w.endsWith('sses')))
     return w.slice(0, -2)
-  if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') && !w.endsWith('us')) return w.slice(0, -1)
+  if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') && !w.endsWith('us'))
+    return w.slice(0, -1)
   return w
 }
 

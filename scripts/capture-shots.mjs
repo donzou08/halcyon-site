@@ -6,7 +6,7 @@
  * evidence, so they are generated from the real demos rather than mocked up, and
  * they are regenerated whenever a demo changes.
  *
- *   node scripts/serve-like-vercel.mjs 4200      # in another shell
+ *   node scripts/serve-like-vercel.mjs 4400      # in another shell
  *   node scripts/capture-shots.mjs
  *
  * Playwright is not a dependency of this project (the build machine never needs
@@ -17,7 +17,7 @@ import { createRequire } from 'node:module'
 import { existsSync, mkdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-const BASE = process.env.BASE ?? 'http://localhost:4200'
+const BASE = process.env.BASE ?? 'http://localhost:4400'
 const OUT = resolve(import.meta.dirname, '../public/shots')
 
 const CANDIDATES = [

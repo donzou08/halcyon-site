@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Container, Page } from '../components/chrome'
-import { CONTACT, HAS_PHONE, PHONE_HREF, REACH } from '../data/site'
+import { CONTACT, HAS_PHONE, HAS_WHATSAPP, PHONE_HREF, REACH, whatsappHref } from '../data/site'
 
 /**
  * Contact, as a three-step intake.
@@ -116,7 +116,10 @@ export default function Contact() {
     try {
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
         body: JSON.stringify({
           _subject: `New enquiry: ${record.Company || record.Name}`,
           ...record,
@@ -157,14 +160,18 @@ export default function Contact() {
                   {CONTACT.founder}
                   <span className="block text-ink-3">{CONTACT.role}</span>
                 </Row>
-                <Row label="Email">
-                  <a
-                    href={`mailto:${CONTACT.email}`}
-                    className="underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-gold-ink"
-                  >
-                    {CONTACT.email}
-                  </a>
-                </Row>
+                {HAS_WHATSAPP && (
+                  <Row label="WhatsApp">
+                    <a
+                      href={whatsappHref()}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="num underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-gold-ink"
+                    >
+                      {CONTACT.whatsapp || CONTACT.phone}
+                    </a>
+                  </Row>
+                )}
                 {HAS_PHONE && (
                   <Row label="Phone">
                     <a
@@ -175,16 +182,22 @@ export default function Contact() {
                     </a>
                   </Row>
                 )}
-                <Row label="Office">
-                  {CONTACT.address.line}
-                  <span className="block">{CONTACT.address.area}</span>
-                  <span className="block">
-                    {CONTACT.address.city} {CONTACT.address.postcode}
-                  </span>
+                <Row label="Email">
+                  <a
+                    href={`mailto:${CONTACT.email}`}
+                    className="underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-gold-ink"
+                  >
+                    {CONTACT.email}
+                  </a>
                 </Row>
                 <Row label="Reach">{REACH}</Row>
                 <Row label="Response">{CONTACT.responseTime}</Row>
               </dl>
+
+              <p className="mt-8 text-[0.86rem] leading-relaxed text-ink-3">
+                Any of these reach the same person. The form is only worth using if you would rather
+                set out the problem in one go than start a back and forth.
+              </p>
             </div>
 
             {/* ------------------------------------------- Right: the intake */}
@@ -203,7 +216,9 @@ export default function Contact() {
                 <div className="h-px w-full bg-rule">
                   <div
                     className="h-px bg-gold transition-[width] duration-500 ease-out"
-                    style={{ width: status === 'sent' ? '100%' : `${((step + 1) / 3) * 100}%` }}
+                    style={{
+                      width: status === 'sent' ? '100%' : `${((step + 1) / 3) * 100}%`,
+                    }}
                   />
                 </div>
 
@@ -215,14 +230,10 @@ export default function Contact() {
                         That is with Sanjith.
                       </h2>
                       <p className="prose-measure mt-4 text-[0.98rem] leading-relaxed text-ink-2">
-                        You will get a reply personally, within 24 hours. If it is urgent, email{' '}
-                        <a
-                          href={`mailto:${CONTACT.email}`}
-                          className="underline decoration-gold decoration-2 underline-offset-4"
-                        >
-                          {CONTACT.email}
-                        </a>
-                        {HAS_PHONE ? ' or call the number on this page.' : ' directly.'}
+                        You will get a reply personally, within 24 hours. If it is urgent,{' '}
+                        {HAS_WHATSAPP || HAS_PHONE
+                          ? 'use the number on this page.'
+                          : 'email ' + CONTACT.email + ' directly.'}
                       </p>
                     </div>
                   ) : (
@@ -249,7 +260,9 @@ export default function Contact() {
                                 </button>
                               ))}
                             </div>
-                            {touched && !a.industry && <FieldError>Pick the closest one.</FieldError>}
+                            {touched && !a.industry && (
+                              <FieldError>Pick the closest one.</FieldError>
+                            )}
                           </div>
 
                           <Text
@@ -317,7 +330,9 @@ export default function Contact() {
                               value={a.email}
                               onChange={set('email')}
                               autoComplete="email"
-                              error={touched && !a.email.trim() ? 'We need an email to reply to.' : ''}
+                              error={
+                                touched && !a.email.trim() ? 'We need an email to reply to.' : ''
+                              }
                             />
                             <Text
                               label="Phone"
@@ -369,11 +384,7 @@ export default function Contact() {
                           disabled={status === 'sending'}
                           className="ml-auto border border-ink bg-ink px-7 py-3.5 text-[0.92rem] font-500 text-paper transition-colors hover:bg-transparent hover:text-ink disabled:cursor-not-allowed disabled:opacity-55"
                         >
-                          {status === 'sending'
-                            ? 'Sending…'
-                            : step === 2
-                              ? 'Send this'
-                              : 'Next'}
+                          {status === 'sending' ? 'Sending…' : step === 2 ? 'Send this' : 'Next'}
                         </button>
                       </div>
                     </>

@@ -74,7 +74,7 @@ const STAGES = ['Surface preparation', 'Primer', 'Screed / body coat', 'Top coat
 export const DEMO_SITES: Site[] = [
   {
     id: 'site-orion',
-    name: 'Orion Auto — Ambattur',
+    name: 'Orion Auto, Ambattur',
     client: 'Orion Auto Components Pvt Ltd',
     address: 'Plot 22, Ambattur Industrial Estate, Chennai 600058',
     lat: 13.1143,
@@ -88,7 +88,7 @@ export const DEMO_SITES: Site[] = [
   },
   {
     id: 'site-sunrise',
-    name: 'Sunrise Pharma — Sriperumbudur',
+    name: 'Sunrise Pharma, Sriperumbudur',
     client: 'Sunrise Pharma Industries',
     address: 'Survey No. 118, SIPCOT Phase II, Sriperumbudur 602105',
     lat: 12.9675,
@@ -102,7 +102,7 @@ export const DEMO_SITES: Site[] = [
   },
   {
     id: 'site-coastal',
-    name: 'Coastal Cold Storage — Ennore',
+    name: 'Coastal Cold Storage, Ennore',
     client: 'Coastal Cold Storage Ltd',
     address: 'Kamarajar Port Road, Ennore, Chennai 600057',
     lat: 13.221,
@@ -116,7 +116,7 @@ export const DEMO_SITES: Site[] = [
   },
   {
     id: 'site-bluewave',
-    name: 'Bluewave Electronics — Oragadam',
+    name: 'Bluewave Electronics, Oragadam',
     client: 'Bluewave Electronics Manufacturing',
     address: 'Oragadam Industrial Corridor, Kancheepuram 602105',
     lat: 12.81,
@@ -335,7 +335,7 @@ export function buildSeedState(now = new Date()): DemoState {
         { category: 'screed', qty: 580, unit: 'sqm', thicknessMm: 6 },
         { category: 'filling', qty: 45, unit: 'kg', thicknessMm: null },
       ],
-      incompleteReason: 'Short of the 600 sqm target — last 20 sqm blocked by a pallet stack.',
+      incompleteReason: 'Short of the 600 sqm target, last 20 sqm blocked by a pallet stack.',
       checkoutPhotos: [],
     },
     // Sunrise — visit closed, but it left an open issue behind.
@@ -357,7 +357,7 @@ export function buildSeedState(now = new Date()): DemoState {
       checkinNotes: '',
       checkoutTime: hoursAgo(now, 2),
       actualWork:
-        'Grinding completed across 340 sqm. Moisture readings taken — two zones came back high.',
+        'Grinding completed across 340 sqm. Moisture readings taken, two zones came back high.',
       stageReached: 'Surface preparation',
       coverage: [{ category: 'surface_prep', qty: 340, unit: 'sqm', thicknessMm: null }],
       incompleteReason: '',
@@ -373,7 +373,7 @@ export function buildSeedState(now = new Date()): DemoState {
       type: 'quality',
       severity: 'high',
       description:
-        'Moisture reading above limit in two zones near the wash bay. Cannot prime until it dries or we add a moisture barrier — needs a decision.',
+        'Moisture reading above limit in two zones near the wash bay. Cannot prime until it dries or we add a moisture barrier, needs a decision.',
       status: 'open',
       photos: [],
       createdAt: hoursAgo(now, 2.1),
@@ -390,7 +390,7 @@ export function buildSeedState(now = new Date()): DemoState {
       type: 'safety',
       severity: 'medium',
       description:
-        'Forklift route still crosses the freshly primed bay. Barricades requested from the client stores — needs chasing before the screed goes down.',
+        'Forklift route still crosses the freshly primed bay. Barricades requested from the client stores, needs chasing before the screed goes down.',
       status: 'open',
       photos: [],
       createdAt: hoursAgo(now, 1.5),

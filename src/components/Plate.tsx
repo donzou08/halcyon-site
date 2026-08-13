@@ -86,7 +86,10 @@ export function ShotImage({
   priority?: boolean
 }) {
   return (
-    <div style={{ aspectRatio: RATIO[shot.kind] }} className={`overflow-hidden bg-sunk ${className}`}>
+    <div
+      style={{ aspectRatio: RATIO[shot.kind] }}
+      className={`overflow-hidden bg-sunk ${className}`}
+    >
       <img
         src={`/shots/${shot.src}.png`}
         alt={shot.caption}

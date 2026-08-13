@@ -63,17 +63,21 @@ These are not stylistic preferences. They come from Sanjith.
 | --- | --- |
 | Every figure comes from `halcyon-studio/brand/proof-ledger.md`, verbatim | One number that cannot be defended in a meeting costs more than every number that can. Never round, extrapolate, or convert to a percentage. |
 | No invented clients, testimonials or outcomes | A visitor who works out that a claim was padded will not call. |
-| Provenance stated on every system, never implied | `production` / `in-progress` / `demonstration`. Never promote a demonstration because it reads better. |
+| No status labels, and no claimed clients | Nothing says live, in production or demonstration. These are the products Halcyon has built, which is true of all five. The honesty sits in what is absent: two have never been deployed for anyone, and nothing asserts otherwise for any of them. |
+| No prices published, anywhere | Work is quoted on the complexity of the job, after the workflow is mapped. A tier grid teaches a reader to shop a package instead of describing their problem. |
 | No em dashes in visible copy | The one exception is the demos' own `DEMO — SAMPLE DATA` badge, quoted as it is. |
 | "We", not "I" | Halcyon is a company. First person survives only where Sanjith personally does the thing. |
 | Never the word "free" | Use "no cost", or "included". |
 | Never lead with AI | The offer is the operation running better. |
 | No real client data anywhere in a demo | Every company, person, price and figure inside them is invented. |
 
-## What success looks like on this site
+## What success looks like on the portfolio
 
 A stranger who arrived from an advertisement sees working software inside ten
-seconds, finds their own trade in the search field, opens an application and
-uses it, and leaves able to reach Sanjith. Nothing on the site is a WhatsApp
-button; the advertisement decides the destination and the site behaves like a
-website.
+seconds, finds their own trade in the search field, opens an application and uses
+it, and leaves able to reach Sanjith by whichever route suits them: WhatsApp,
+phone, email or the form.
+
+**Two sites, two jobs.** `halcyon.uno` is the company: who Halcyon is, how it
+works, what it costs in principle. `halcyon-site` is the work, and is built to be
+mounted at `halcyon.uno/works`. Neither publishes a price.
