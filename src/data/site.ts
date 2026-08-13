@@ -27,7 +27,7 @@ export const CONTACT = {
    *
    * Write it as it should read, for example '+91 98765 43210'.
    */
-  phone: '',
+  phone: '+91 91760 88866',
 
   /**
    * The WhatsApp number, if it differs from the one above. Leave empty to use

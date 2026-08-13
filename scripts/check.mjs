@@ -375,6 +375,60 @@ console.log('\nMobile')
 }
 
 /* ------------------------------------------------------------------ *
+ * The ways to reach a person actually work.
+ *
+ * These are the only conversion on the site, and every one of them is a
+ * hand-built URL that fails silently: a tel: link with a space in it does
+ * nothing on a phone, and a wa.me link with a + or a space in the number opens
+ * WhatsApp on an error screen rather than a chat. Nothing in a build or a type
+ * check looks at the inside of an href.
+ * ------------------------------------------------------------------ */
+console.log('\nContact routes')
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await ctx.newPage()
+  await page.goto(BASE + '/contact', { waitUntil: 'networkidle' })
+
+  const hrefs = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('a[href]')).map((a) => a.getAttribute('href')),
+  )
+
+  const tel = hrefs.filter((h) => h.startsWith('tel:'))
+  const wa = hrefs.filter((h) => h.includes('wa.me'))
+  const mail = hrefs.filter((h) => h.startsWith('mailto:'))
+
+  // tel: must be digits after a single leading +, or a dialler ignores it.
+  const badTel = tel.filter((h) => !/^tel:\+[0-9]{8,15}$/.test(h))
+  tel.length === 0
+    ? fail('no phone link on /contact')
+    : badTel.length
+      ? fail(`malformed tel link: ${badTel.join(', ')}`)
+      : pass(`phone link is diallable (${tel[0]})`)
+
+  // wa.me wants bare digits including the country code. No +, no spaces.
+  const badWa = wa.filter((h) => !/^https:\/\/wa\.me\/[0-9]{10,15}(\?|$)/.test(h))
+  wa.length === 0
+    ? fail('no WhatsApp link on /contact')
+    : badWa.length
+      ? fail(`malformed WhatsApp link: ${badWa.join(', ')}`)
+      : pass(`WhatsApp link is well formed (${wa[0].split('?')[0]})`)
+
+  mail.length ? pass(`email link present (${mail[0].split('?')[0]})`) : fail('no email link')
+
+  // The message a system page sends should name that system, or the first
+  // thing Sanjith sees is an unknown number saying nothing.
+  await page.goto(BASE + '/supervisor', { waitUntil: 'networkidle' })
+  const sysWa = await page.evaluate(
+    () => document.querySelector('a[href*="wa.me"]')?.getAttribute('href') ?? '',
+  )
+  decodeURIComponent(sysWa).includes('Field Supervisor')
+    ? pass('a system page pre-fills the message with its own name')
+    : fail(`system WhatsApp link does not name the system: ${sysWa.slice(0, 90)}`)
+
+  await ctx.close()
+}
+
+/* ------------------------------------------------------------------ *
  * The status vocabulary is gone for good.
  *
  * These read as the products Halcyon has built. Labelling one live, in
