@@ -69,10 +69,15 @@ if (slugs.length === 0) {
 const routes = [
   'contact',
   ...slugs,
-  // Shapes that exist in Instagram captions and LinkedIn posts already. The
-  // router redirects them; these exist so the server can hand the router the
-  // chance to.
+  // Shapes that exist in Instagram captions and LinkedIn posts already, and the
+  // pages this site used to carry. main.tsx redirects every one of them, but a
+  // redirect that lives in the router only runs once the router has loaded, and
+  // it cannot load if the server never serves anything.
   'works',
+  'systems',
+  'approach',
+  'engagements',
+  'pricing',
   ...slugs.map((s) => `works/${s}`),
   ...slugs.map((s) => `system/${s}`),
 ]
