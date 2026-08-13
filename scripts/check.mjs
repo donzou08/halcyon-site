@@ -12,7 +12,12 @@
  */
 import { createRequire } from 'node:module'
 
-const BASE = process.argv[2] ?? process.env.BASE ?? 'http://localhost:4400'
+const BASE = process.argv[2] ?? process.env.BASE ?? 'http://localhost:4400/theworks'
+
+/** The path this site is mounted at, derived from BASE, with no trailing slash. */
+const MOUNT = new URL(BASE).pathname.replace(/\/$/, '')
+/** Compare a browser pathname against a site-relative route. */
+const at = (route) => MOUNT + (route === '/' ? '' : route)
 
 const CANDIDATES = [
   process.env.PLAYWRIGHT_DIR,
@@ -96,8 +101,11 @@ console.log('\nPages')
 
   const missing = []
   page.on('response', (r) => {
+    const p = new URL(r.url()).pathname
+    // /_vercel/ is injected by the platform and only exists once deployed.
+    if (p.startsWith('/_vercel/')) return
     if (r.status() >= 400 && new URL(r.url()).origin === new URL(BASE).origin) {
-      missing.push(`${r.status()} ${new URL(r.url()).pathname}`)
+      missing.push(`${r.status()} ${p}`)
     }
   })
 
@@ -127,9 +135,10 @@ console.log('\nPages')
     ['/engagements', '/contact'],
   ]) {
     await page.goto(BASE + from, { waitUntil: 'networkidle' })
-    new URL(page.url()).pathname === to
+    const landed = new URL(page.url()).pathname.replace(/\/$/, '') || '/'
+    landed === (at(to) || '/')
       ? pass(`${from} redirects to ${to}`)
-      : fail(`${from} went to ${new URL(page.url()).pathname}, expected ${to}`)
+      : fail(`${from} went to ${landed}, expected ${at(to) || '/'}`)
   }
 
   await ctx.close()
@@ -173,8 +182,8 @@ console.log('\nSearch')
       .first()
       .getAttribute('href')
       .catch(() => null)
-    if (first === `/${slug}`) pass(`"${query}" → ${slug}`)
-    else fail(`"${query}" → ${first ?? 'nothing'}, expected /${slug}`)
+    if (first === at(`/${slug}`)) pass(`"${query}" → ${slug}`)
+    else fail(`"${query}" → ${first ?? 'nothing'}, expected ${at(`/${slug}`)}`)
   }
 
   for (const [query, slugs] of Object.entries(SEARCHES_CONTAIN)) {
@@ -183,7 +192,7 @@ console.log('\nSearch')
     const hrefs = await page.locator('article a[href^="/"]').evaluateAll((els) =>
       els.map((e) => e.getAttribute('href')),
     )
-    const missing = slugs.filter((s) => !hrefs.includes(`/${s}`))
+    const missing = slugs.filter((s) => !hrefs.includes(at(`/${s}`)))
     missing.length === 0
       ? pass(`"${query}" returns ${slugs.join(' and ')}`)
       : fail(`"${query}" dropped ${missing.join(', ')}; got ${hrefs.join(', ') || 'nothing'}`)

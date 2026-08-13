@@ -3,8 +3,10 @@
 The Halcyon portfolio: five working applications, each one running rather than
 pictured, on one origin and one deploy.
 
-This is **not** the company website. `halcyon.uno` is, and it is unchanged. This
-is built to be mounted at `halcyon.uno/works`, which is why every route is flat.
+**Live at [halcyon.uno/theworks](https://halcyon.uno/theworks).** It is not its
+own deployment: the build is committed into the `halcyon-website` repo and served
+by the halcyon.uno Vercel project, so the demos are same-origin by construction
+rather than by configuration, and there is one URL to give people.
 
 Nothing here is client data.
 
@@ -154,22 +156,20 @@ carries a status label or a price.
 
 ---
 
-## Deploying
-
-There is no Vercel CLI in this environment, so:
+## Publishing
 
 ```bash
-gh repo create halcyon-site --public --source=. --push
+npm run build:all          # demos, then the shell, both carrying the mount
+npm run publish:theworks   # copies dist/ into ../halcyon-website/theworks/
 ```
 
-Import the repo at vercel.com/new. Vite is detected automatically. `vercel.json`
-already carries the SPA rewrite that excludes `/demos/`, and the
-`X-Frame-Options: SAMEORIGIN` header on the demos.
+Then commit and push in `halcyon-website`; Vercel redeploys halcyon.uno and this
+goes with it.
 
-**This does not take the halcyon.uno domain.** halcyon.uno stays on the
-`halcyon-website` project. When you want this under `halcyon.uno/works`, add a
-rewrite on the halcyon.uno project pointing `/works/:path*` at this deployment;
-until then it lives on its own Vercel URL and is linked from the header.
+**The mount point is baked into the build.** `base` is `/theworks/`, every demo
+is rebuilt with `/theworks/demos/<slug>/`, and the local server mounts `dist/`
+at the same place so local matches production. To publish it somewhere else,
+`PORTFOLIO_BASE=/elsewhere/ npm run build:all` and re-publish.
 
 ---
 

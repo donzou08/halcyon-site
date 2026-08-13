@@ -24,6 +24,19 @@ import { fileURLToPath } from 'node:url'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const DEMOS = ['quotation', 'supervisor', 'tender', 'foundry', 'command-center']
 
+/**
+ * The site's mount point. Must match `base` in vite.config.ts.
+ *
+ * Each demo's own vite config sets `base: '/demos/<slug>/'`, which is right only
+ * when the site is served from the root of a domain. It is not: it lives at
+ * halcyon.uno/theworks, so every demo has to be rebuilt with the mount in front
+ * of it or its script and stylesheet resolve to halcyon.uno/demos/... and the
+ * iframe renders an empty page. The failure is silent, and it looks like a
+ * broken demo rather than a wrong path, so it is worth overriding here rather
+ * than in five separate configs that can drift.
+ */
+const MOUNT = (process.env.PORTFOLIO_BASE ?? '/theworks/').replace(/\/?$/, '/')
+
 const only = process.argv.slice(2)
 const targets = only.length ? DEMOS.filter((d) => only.includes(d)) : DEMOS
 
@@ -41,8 +54,9 @@ for (const slug of targets) {
     execSync('npm install --no-audit --no-fund', { cwd: dir, stdio: 'inherit' })
   }
 
-  console.log(`\n[${slug}] building`)
-  execSync('npm run build', { cwd: dir, stdio: 'inherit' })
+  const base = `${MOUNT}demos/${slug}/`
+  console.log(`\n[${slug}] building with base ${base}`)
+  execSync(`npm run build -- --base=${base}`, { cwd: dir, stdio: 'inherit' })
 
   rmSync(out, { recursive: true, force: true })
   mkdirSync(out, { recursive: true })

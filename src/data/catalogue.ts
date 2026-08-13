@@ -88,7 +88,7 @@ export interface System {
   provenance: Provenance
   /** The invented business the sample data is written for. Never a real client. */
   client: string
-  /** Path to the built demo, relative to the site root. */
+  /** Path to the built demo, relative to the site's base. Joined via `demoUrl`. */
   demo: string
   /**
    * Some demos ship a separate route for the phone. The foundry one is built as
@@ -130,7 +130,7 @@ export const SYSTEMS: System[] = [
     niche: 'flooring',
     provenance: 'production',
     client: 'Meridian Industrial Flooring',
-    demo: '/demos/quotation/',
+    demo: 'demos/quotation/',
     defaultFrame: 'phone',
     storagePrefixes: ['meridian.demo.', 'meridian.capture.'],
     problem:
@@ -228,7 +228,7 @@ export const SYSTEMS: System[] = [
     niche: 'flooring',
     provenance: 'production',
     client: 'Meridian Industrial Flooring',
-    demo: '/demos/supervisor/',
+    demo: 'demos/supervisor/',
     defaultFrame: 'phone',
     storagePrefixes: ['meridian.supervisor.', 'meridian.capture.'],
     problem:
@@ -325,7 +325,7 @@ export const SYSTEMS: System[] = [
     niche: 'flooring',
     provenance: 'in-progress',
     client: 'Meridian Industrial Flooring',
-    demo: '/demos/tender/',
+    demo: 'demos/tender/',
     defaultFrame: 'phone',
     storagePrefixes: ['meridian.tender.'],
     problem:
@@ -419,8 +419,8 @@ export const SYSTEMS: System[] = [
     niche: 'manufacturing',
     provenance: 'demonstration',
     client: 'Kestrel Castings',
-    demo: '/demos/foundry/#/split',
-    demoPhone: '/demos/foundry/#/worker',
+    demo: 'demos/foundry/#/split',
+    demoPhone: 'demos/foundry/#/worker',
     defaultFrame: 'desktop',
     storagePrefixes: ['kestrel_demo_state_v1'],
     problem:
@@ -527,7 +527,7 @@ export const SYSTEMS: System[] = [
     niche: 'any-business',
     provenance: 'demonstration',
     client: 'Ashwood Contracts',
-    demo: '/demos/command-center/',
+    demo: 'demos/command-center/',
     defaultFrame: 'desktop',
     storagePrefixes: ['halcyon.cc.'],
     problem:

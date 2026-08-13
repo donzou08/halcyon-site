@@ -6,6 +6,7 @@ import { SystemCard } from '../components/SystemCard'
 import { NICHES, SYSTEMS, systemBySlug } from '../data/catalogue'
 import { PRICING_STANCE, SAMPLE_DATA_NOTE } from '../data/site'
 import { search } from '../lib/search'
+import { asset } from '../lib/paths'
 
 /**
  * The portfolio.
@@ -68,7 +69,7 @@ export default function Home() {
                 </div>
                 <div style={{ aspectRatio: '1360 / 850' }} className="overflow-hidden bg-sunk">
                   <img
-                    src={`/shots/${lead.shots[0].src}.png`}
+                    src={asset(`shots/${lead.shots[0].src}.png`)}
                     alt={lead.shots[0].caption}
                     width={1360}
                     height={850}

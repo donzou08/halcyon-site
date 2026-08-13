@@ -1,4 +1,5 @@
 import type { Shot } from '../data/catalogue'
+import { asset } from '../lib/paths'
 
 /**
  * A screenshot, presented as a plate in a technical document.
@@ -51,7 +52,7 @@ export function Plate({
         </div>
         <div style={{ aspectRatio: RATIO[shot.kind] }} className="overflow-hidden bg-sunk">
           <img
-            src={`/shots/${shot.src}.png`}
+            src={asset(`shots/${shot.src}.png`)}
             alt={shot.caption}
             width={shot.kind === 'phone' ? 390 : 1360}
             height={shot.kind === 'phone' ? 844 : 850}
@@ -91,7 +92,7 @@ export function ShotImage({
       className={`overflow-hidden bg-sunk ${className}`}
     >
       <img
-        src={`/shots/${shot.src}.png`}
+        src={asset(`shots/${shot.src}.png`)}
         alt={shot.caption}
         width={shot.kind === 'phone' ? 390 : 1360}
         height={shot.kind === 'phone' ? 844 : 850}

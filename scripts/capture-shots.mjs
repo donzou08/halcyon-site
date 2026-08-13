@@ -17,7 +17,8 @@ import { createRequire } from 'node:module'
 import { existsSync, mkdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-const BASE = process.env.BASE ?? 'http://localhost:4400'
+// Includes the mount point: the build bakes it into every URL.
+const BASE = process.env.BASE ?? 'http://localhost:4400/theworks'
 const OUT = resolve(import.meta.dirname, '../public/shots')
 
 const CANDIDATES = [

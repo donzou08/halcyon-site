@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { System } from '../data/catalogue'
+import { demoUrl } from '../lib/paths'
 
 type Frame = 'phone' | 'desktop'
 
@@ -56,7 +57,9 @@ export function DemoFrame({ system }: { system: System }) {
 
   // On a phone the demo always gets the phone route where one exists.
   const effectiveFrame: Frame = wide ? frame : 'phone'
-  const src = effectiveFrame === 'phone' && system.demoPhone ? system.demoPhone : system.demo
+  const src = demoUrl(
+    effectiveFrame === 'phone' && system.demoPhone ? system.demoPhone : system.demo,
+  )
 
   const reset = useCallback(() => {
     clearStorage(system.storagePrefixes)
@@ -129,7 +132,7 @@ export function DemoFrame({ system }: { system: System }) {
             Reset the demo
           </button>
           <a
-            href={system.demo}
+            href={demoUrl(system.demo)}
             target="_blank"
             rel="noreferrer"
             className="text-[0.8rem] text-ink-3 transition-colors hover:text-ink"
@@ -211,7 +214,7 @@ function LaunchCard({ system, onOpen }: { system: System; onOpen: () => void }) 
           Open {system.name}
         </button>
         <a
-          href={system.demoPhone ?? system.demo}
+          href={demoUrl(system.demoPhone ?? system.demo)}
           target="_blank"
           rel="noreferrer"
           className="mt-3 block w-full border border-rule-strong px-6 py-3 text-center text-[0.85rem] text-ink-2"

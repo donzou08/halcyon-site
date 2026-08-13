@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { nicheBySlug, type System } from '../data/catalogue'
+import { asset } from '../lib/paths'
 
 /**
  * One system, as a row in a catalogue.
@@ -50,7 +51,7 @@ export function SystemCard({
             }`}
           >
             <img
-              src={`/shots/${shot.src}.png`}
+              src={asset(`shots/${shot.src}.png`)}
               alt=""
               width={shot.kind === 'phone' ? 390 : 1360}
               height={shot.kind === 'phone' ? 844 : 850}

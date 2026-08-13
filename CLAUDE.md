@@ -3,10 +3,44 @@
 **The Halcyon portfolio.** The five systems Halcyon has built, each one running
 rather than pictured, plus a contact route. Created 2026-08-13.
 
-**It is not the company website.** `halcyon.uno` is, it stays as it is, and this
-is designed to be mounted at `halcyon.uno/works`. An earlier version of this repo
-was a full marketing site with its own home, approach and pricing pages; Sanjith
-cut all of that on 2026-08-13 so the two do not compete.
+**It is not the company website, and it is not its own deployment.** It is
+**served by the halcyon.uno Vercel project at `/theworks`**, from a copy of
+`dist/` committed into the `halcyon-website` repo. That is what
+`npm run publish:theworks` does. An earlier version of this repo was a full
+marketing site with its own home, approach and pricing pages; Sanjith cut all of
+that on 2026-08-13 so the two do not compete.
+
+## The mount point, which everything depends on
+
+`base` in `vite.config.ts` is **`/theworks/`**, and it is baked into every URL in
+the build. Three consequences, each of which has already caused a silent failure:
+
+1. **Runtime paths must go through `src/lib/paths.ts`.** Vite rewrites the URLs
+   it can see in the module graph; a path built from a template string at runtime
+   is invisible to it. Every screenshot and every demo URL is exactly that, so
+   `asset()` and `demoUrl()` exist and must be used.
+2. **The demos are rebuilt with the mount in front of them.** Each demo's own
+   vite config says `base: '/demos/<slug>/'`, which is right only at a domain
+   root. `scripts/build-demos.mjs` overrides it to `/theworks/demos/<slug>/`.
+   Without that the iframe loads an empty page.
+3. **Serving `dist/` at the root passes tests that production fails.**
+   `scripts/serve-like-vercel.mjs` mounts it at `/theworks/`, and `check.mjs`
+   and `capture-shots.mjs` both default to `http://localhost:4400/theworks`.
+
+Publishing anywhere else means `PORTFOLIO_BASE=/somewhere/ npm run build:all`,
+which every one of those scripts reads.
+
+## Publishing
+
+```bash
+npm run build:all          # demos, then the shell, both with the mount
+npm run publish:theworks   # copies dist/ into ../halcyon-website/theworks/
+```
+
+Then commit and push in `halcyon-website`. Vercel redeploys halcyon.uno and the
+portfolio goes with it. Routing lives in that repo's `vercel.json`: real files
+first, then each demo's own index.html, then the portfolio shell, then the
+marketing page.
 
 Read [README.md](README.md) for architecture, [PRODUCT.md](PRODUCT.md) for what
 Halcyon is and the content gates, [DESIGN.md](DESIGN.md) for the visual system.
