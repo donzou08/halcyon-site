@@ -109,6 +109,19 @@ console.log('\nPages')
     }
   })
 
+  /* The bare mount URL, with no trailing slash, is checked first and by itself.
+     It is the URL a person types and the one that gets shared, and it is the
+     only one that exercises the router's basename against a pathname that does
+     not end in a slash. It rendered a blank page in production while every
+     other route on this list was fine. */
+  {
+    const res = await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 45000 })
+    await page.waitForTimeout(2500)
+    const h1 = await page.locator('h1').first().innerText().catch(() => '')
+    if (res && res.status() < 400 && h1.trim()) pass(`${BASE} renders "${h1.trim().slice(0, 34)}"`)
+    else fail(`${BASE} (no trailing slash) rendered nothing`)
+  }
+
   for (const path of ['/', '/contact', ...SYSTEMS.map((s) => `/${s}`)]) {
     missing.length = 0
     const res = await page.goto(BASE + path, { waitUntil: 'networkidle', timeout: 45000 })

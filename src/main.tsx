@@ -51,7 +51,13 @@ function LegacyRedirect() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    {/* No trailing slash. BASE_URL always ends in one, and React Router treats a
+        pathname of `/theworks` as outside a basename of `/theworks/`, so it
+        matches no route and renders nothing at all. The page is blank, the
+        console is clean, and `/theworks/` with the slash works fine, which is
+        why it survives any test that only ever requests the canonical form.
+        The bare URL is the one people type and share. */}
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <ScrollToTop />
       <TrackRoutes />
       <Routes>
