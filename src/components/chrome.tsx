@@ -334,8 +334,41 @@ export function Container({
  * WhatsApp message and the email subject. A first message that already says what
  * it is about gets answered; "Hi" from an unknown number does not.
  */
-export function ContactRoutes({ system }: { system?: string }) {
+export function ContactRoutes({
+  system,
+  tone = 'paper',
+}: {
+  system?: string
+  /**
+   * The ground this sits on.
+   *
+   * Not cosmetic. Every colour below is picked for one background, and the
+   * default set is near-black ink on paper. Dropped onto the obsidian closing
+   * section it rendered `text-ink` (#111110) on `bg-obsidian` (#111110): the
+   * phone and email buttons became empty outlines and the WhatsApp button lost
+   * its fill, so the only conversion block on six pages was invisible while the
+   * markup, the links and every test stayed perfectly green.
+   */
+  tone?: 'paper' | 'obsidian'
+}) {
   const subject = encodeURIComponent(system ? `Halcyon, ${system}` : 'Halcyon')
+  const dark = tone === 'obsidian'
+
+  const primary = dark
+    ? 'border-gold bg-gold text-obsidian hover:bg-transparent hover:text-gold'
+    : 'border-ink bg-ink text-paper hover:bg-transparent hover:text-ink'
+
+  const secondary = dark
+    ? 'border-obsidian-rule text-on-obsidian hover:border-gold hover:text-gold'
+    : 'border-rule-strong text-ink hover:border-ink'
+
+  const quiet = dark
+    ? 'text-on-obsidian-2 decoration-obsidian-rule hover:text-on-obsidian'
+    : 'text-ink-3 decoration-rule-strong hover:text-ink'
+
+  const btn =
+    'flex items-center gap-2.5 border px-6 py-3.5 text-[0.9rem] font-500 transition-[background-color,border-color,color,transform] duration-200 ease-out active:scale-[0.98]'
+
   return (
     <div className="flex flex-wrap items-center gap-3">
       {HAS_WHATSAPP && (
@@ -343,37 +376,26 @@ export function ContactRoutes({ system }: { system?: string }) {
           href={whatsappHref(system)}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-2.5 border border-ink bg-ink px-6 py-3.5 text-[0.9rem] font-500 text-paper transition-colors hover:bg-transparent hover:text-ink"
+          className={`${btn} ${primary}`}
         >
           <WhatsAppMark size={16} />
           Message on WhatsApp
         </a>
       )}
       {HAS_PHONE && (
-        <a
-          href={PHONE_HREF}
-          className={`border px-6 py-3.5 text-[0.9rem] font-500 transition-colors ${
-            HAS_WHATSAPP
-              ? 'border-rule-strong text-ink hover:border-ink'
-              : 'border-ink bg-ink text-paper hover:bg-transparent hover:text-ink'
-          }`}
-        >
+        <a href={PHONE_HREF} className={`${btn} ${HAS_WHATSAPP ? secondary : primary}`}>
           <span className="num">{CONTACT.phone}</span>
         </a>
       )}
       <a
         href={`mailto:${CONTACT.email}?subject=${subject}`}
-        className={`border px-6 py-3.5 text-[0.9rem] font-500 transition-colors ${
-          HAS_WHATSAPP || HAS_PHONE
-            ? 'border-rule-strong text-ink hover:border-ink'
-            : 'border-ink bg-ink text-paper hover:bg-transparent hover:text-ink'
-        }`}
+        className={`${btn} ${HAS_WHATSAPP || HAS_PHONE ? secondary : primary}`}
       >
         {CONTACT.email}
       </a>
       <Link
         to="/contact"
-        className="text-[0.88rem] text-ink-3 underline decoration-rule-strong underline-offset-4 transition-colors hover:text-ink"
+        className={`text-[0.88rem] underline underline-offset-4 transition-colors duration-200 ease-out ${quiet}`}
       >
         or send the details
       </Link>

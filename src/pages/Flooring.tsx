@@ -359,7 +359,7 @@ export default function Flooring() {
                 knows where everything is. We will tell you what is worth building and what is not.
               </p>
               <div className="mt-9">
-                <ContactRoutes system="industrial flooring systems" />
+                <ContactRoutes system="industrial flooring systems" tone="obsidian" />
               </div>
             </div>
 

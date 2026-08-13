@@ -234,7 +234,7 @@ export default function System() {
                 and we will tell you what is worth building.
               </p>
               <div className="mt-8">
-                <ContactRoutes system={system.name} />
+                <ContactRoutes system={system.name} tone="obsidian" />
               </div>
             </div>
 

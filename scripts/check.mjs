@@ -376,6 +376,71 @@ console.log('\nMobile')
 }
 
 /* ------------------------------------------------------------------ *
+ * The contact block is legible on whatever it is sitting on.
+ *
+ * This is measured from the rendered page rather than read from the markup,
+ * because the markup was correct when it broke. ContactRoutes is styled for the
+ * paper ground, and dropping it onto the obsidian closing section rendered
+ * near-black text on near-black: two of the three buttons were empty outlines
+ * and the third lost its fill. Every link worked, every string was present, and
+ * all eighty-two checks passed while the only conversion block on six pages was
+ * invisible.
+ *
+ * Contrast is the one property no amount of asserting on text can catch.
+ * ------------------------------------------------------------------ */
+console.log('\nContact block legibility')
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const page = await ctx.newPage()
+
+  // Relative luminance, then the WCAG ratio. Walks up for the first painted
+  // background, because the element's own is usually transparent.
+  const MEASURE = () => {
+    const lum = (c) => {
+      const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number)
+      const f = (v) => {
+        v /= 255
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+      }
+      return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+    }
+    const groundOf = (el) => {
+      for (let n = el; n; n = n.parentElement) {
+        const bg = getComputedStyle(n).backgroundColor
+        if (bg && !/rgba\(0, 0, 0, 0\)|transparent/.test(bg)) return bg
+      }
+      return 'rgb(255,255,255)'
+    }
+    return [...document.querySelectorAll('a[href*="wa.me"], a[href^="tel:"], a[href^="mailto:"]')]
+      .filter((a) => a.offsetParent !== null)
+      .map((a) => {
+        const cs = getComputedStyle(a)
+        const own = cs.backgroundColor
+        const ground = /rgba\(0, 0, 0, 0\)|transparent/.test(own) ? groundOf(a.parentElement) : own
+        const L1 = lum(cs.color)
+        const L2 = lum(ground)
+        const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05)
+        return { label: a.innerText.trim().slice(0, 22), ratio: Math.round(ratio * 10) / 10 }
+      })
+  }
+
+  for (const path of ['/', '/industrial-flooring', '/supervisor', '/contact']) {
+    await page.goto(BASE + path, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(600)
+    const results = await page.evaluate(MEASURE)
+    if (results.length === 0) {
+      fail(`${path} shows no contact link at all`)
+      continue
+    }
+    const illegible = results.filter((r) => r.ratio < 4.5)
+    illegible.length === 0
+      ? pass(`${path}: ${results.length} contact links legible (worst ${Math.min(...results.map((r) => r.ratio))}:1)`)
+      : fail(`${path} illegible: ${illegible.map((r) => `"${r.label}" ${r.ratio}:1`).join(', ')}`)
+  }
+  await ctx.close()
+}
+
+/* ------------------------------------------------------------------ *
  * The published figures are exactly the ones in the ledger.
  *
  * This site and halcyon.uno/work both quote the same production counts, read on
