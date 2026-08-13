@@ -27,6 +27,40 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111110'/%3E%3Cpath d='M16 4.5 26.4 10.5v12L16 28.5 5.6 22.5v-12L16 4.5Z' fill='none' stroke='%23C49A38' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M12.4 11.6v8.8M19.6 11.6v8.8M12.4 16h7.2' stroke='%23C49A38' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E"
     />
 
+    <!-- Structured data. The postal address matters more than usual here:
+         in-person delivery across Chennai and Tamil Nadu is the part no larger
+         firm will match, and local search is where that gets found. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Halcyon",
+        "url": "https://halcyon.uno/",
+        "email": "sanjith@halcyon.uno",
+        "description": "Halcyon builds bespoke operational software for manufacturing, construction, contracting and industrial supply businesses in India.",
+        "founder": { "@type": "Person", "name": "Sanjith Dhandapani" },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Plot No. 2041, 15th Main Road, H Block, Anna Nagar West",
+          "addressLocality": "Chennai",
+          "postalCode": "600040",
+          "addressRegion": "Tamil Nadu",
+          "addressCountry": "IN"
+        },
+        "areaServed": [
+          { "@type": "State", "name": "Tamil Nadu" },
+          { "@type": "Country", "name": "India" }
+        ],
+        "knowsAbout": [
+          "Quotation and estimating systems",
+          "Field staff tracking and proof of visit",
+          "Government tender monitoring",
+          "Production counting and scrap tracking",
+          "Owner dashboards and cash visibility"
+        ]
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

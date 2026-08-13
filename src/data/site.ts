@@ -190,7 +190,10 @@ export const TIERS: Tier[] = [
     setup: '₹60,000 to 1,20,000',
     monthly: '₹15,000 to 20,000',
     includes: ['Three systems, sequenced', 'Monthly improvements', 'API usage to a baseline'],
-    support: 'WhatsApp support',
+    // Describes the responsiveness rather than the app. Sanjith's instruction on
+    // 2026-08-13 was that nothing on the site names WhatsApp: the advertisement
+    // decides whether somebody lands in a chat, and the site stays a website.
+    support: 'Same-day messaging',
   },
   {
     name: 'Partner',

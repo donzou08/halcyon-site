@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# The demos are applications, not pages. Their built HTML is a single empty
+# shell per app, so indexing them puts contentless results in front of people
+# searching for Halcyon.
+Disallow: /demos/
+
+Sitemap: https://halcyon.uno/sitemap.xml
